@@ -1,0 +1,21 @@
+services:
+  db-dev:
+    image: mariadb:10.11
+    user: "mysql"
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+      MYSQL_DATABASE: dev
+      MYSQL_USER: dev
+      MYSQL_PASSWORD_FILE: /run/secrets/db_password
+
+volumes:
+  db_data:
+    external: true
+
+secrets:
+  mysql_root_password:
+    external: true
+  mysql_app_password:
+    external: true

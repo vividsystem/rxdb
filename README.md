@@ -3,7 +3,8 @@
 ## Roadmap
 
 - [x] Create DB Schema
-- [ ] create docker compose w/ mariadb and vault
+- [x] create docker compose w/ mariadb
 - [ ] Create Login Page
+- [ ] add vault support for encryption at rest for mariadb
 
 
