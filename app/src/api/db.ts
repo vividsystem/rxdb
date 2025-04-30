@@ -1,6 +1,11 @@
-import { drizzle, BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
-import Database from "better-sqlite3";
+import { drizzle } from "drizzle-orm/mysql2";
+import mysql from 'mysql2/promise';
 
-const sqlite = new Database('./drizzle/db.sqlite');
+const connection = await mysql.createConnection({
+  host: process.env.DB_HOST!,
+  user: process.env.DB_USER!,
+	password: process.env.DB_PASSWORD!,
+  database: process.env.DB_NAME!,
+});
 
-export const db: BetterSQLite3Database = drizzle(sqlite);
+export const db = drizzle(connection);
