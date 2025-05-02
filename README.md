@@ -3,8 +3,10 @@
 ## Roadmap
 
 - [x] Create DB Schema
-- [x] create docker compose w/ mariadb
+- [x] create docker compose w/ postgres 
+- [ ] create member page
 - [ ] Create Login Page
-- [ ] add vault support for encryption at rest for mariadb
+- [ ] switch to a db with tde
+- [ ] add vault support for encryption at rest
 
 

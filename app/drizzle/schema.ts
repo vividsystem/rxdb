@@ -1,7 +1,7 @@
-import { int, mysqlTable, timestamp, varchar, boolean, year } from "drizzle-orm/mysql-core";
+import { integer, pgTable, timestamp, varchar, boolean } from "drizzle-orm/pg-core";
 
-export const Member = mysqlTable("users", {
-  id: int("id").primaryKey().unique().notNull(),
+export const members = pgTable("members", {
+  id: integer("id").primaryKey().unique().notNull(),
 	member_since: timestamp("member_since").defaultNow().notNull(),
   firstname: varchar("firstname", { length: 32 }).notNull(),
   lastname: varchar("lastname", { length: 32 }).notNull(),
@@ -10,6 +10,6 @@ export const Member = mysqlTable("users", {
 	postal: varchar("postal", { length: 5 }).notNull(),
 	city: varchar("city", {length: 64 }).notNull(),
 	cert: boolean("certificate").notNull().default(false),
-	yearOfExchange: year("year_of_exchange").notNull(),
+	yearOfExchange: varchar("year_of_exchange", { length: 7 }).notNull(),
 	exchangeCountry: varchar("exchange_country", { length: 64 }).notNull()
 });
