@@ -13,10 +13,13 @@
   "dependencies": {
     "@solidjs/router": "^0.15.0",
     "@solidjs/start": "^1.1.0",
+    "@tailwindcss/vite": "^4.1.5",
     "drizzle-orm": "^0.43.1",
+    "lucide-solid": "^0.507.0",
     "mysql2": "^3.14.1",
     "pg": "^8.15.6",
     "solid-js": "^1.9.5",
+    "tailwindcss": "^4.1.5",
     "vinxi": "^0.5.3"
   },
   "engines": {

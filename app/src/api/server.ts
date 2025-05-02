@@ -1,12 +1,24 @@
 "use server";
-import { members } from "../../drizzle/schema";
+import { bankingInfo, members } from "../../drizzle/schema";
 import { db } from "./db";
 
 
-export async function getMembers() {
-	return await db.select().from(members)
+export type Member = typeof members.$inferSelect
+export async function getMembers(): Promise<Member[]> {
+	return await db.select().from(members).orderBy(members.lastname)
 }
+type NewMember = Omit<typeof members.$inferInsert,  "bankingId"> 
+type NewBanking = typeof bankingInfo.$inferInsert 
 
-export async function addMember(member: typeof members.$inferInsert) {
-	return await db.insert(members).values(member)
+export async function addMember(member: NewMember, banking: NewBanking) {
+	return await db.transaction(async (tx) => {
+		try {
+
+			const res = await db.insert(bankingInfo).values(banking).returning()
+			await db.insert(members).values({ bankingId: res[0].id, ...member})
+		} catch (e) {
+			console.log(member, banking)
+			throw e
+		}
+	})
 }

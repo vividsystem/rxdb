@@ -1,15 +1,35 @@
-import { integer, pgTable, timestamp, varchar, boolean } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
+import { integer, pgTable, timestamp, varchar, boolean, serial } from "drizzle-orm/pg-core";
 
 export const members = pgTable("members", {
-  id: integer("id").primaryKey().unique().notNull(),
-	member_since: timestamp("member_since").defaultNow().notNull(),
-  firstname: varchar("firstname", { length: 32 }).notNull(),
-  lastname: varchar("lastname", { length: 32 }).notNull(),
-	email: varchar("email", { length: 320 }).notNull(),
-	street: varchar("street", { length: 64 }).notNull(),
-	postal: varchar("postal", { length: 5 }).notNull(),
-	city: varchar("city", {length: 64 }).notNull(),
-	cert: boolean("certificate").notNull().default(false),
-	yearOfExchange: varchar("year_of_exchange", { length: 7 }).notNull(),
-	exchangeCountry: varchar("exchange_country", { length: 64 }).notNull()
+  id: serial("id").primaryKey().unique().notNull(),
+	member_since: timestamp("member_since"),
+  firstname: varchar("firstname", { length: 64 }).notNull(),
+  lastname: varchar("lastname", { length: 64 }).notNull(),
+	telephone: varchar("telephone", {length: 22}),
+	email: varchar("email", { length: 320 }),
+	street: varchar("street", { length: 64 }),
+	postal: varchar("postal", { length: 5 }),
+	city: varchar("city", { length: 64 }),
+	cert: boolean("certificate").default(false).notNull(),
+	yearOfExchange: varchar("year_of_exchange", { length: 9 }),
+	exchangeCountry: varchar("exchange_country", { length: 64 }),
+	bankingId: integer("banking_id").references(() => bankingInfo.id)
 });
+
+
+export const bankingInfo = pgTable("banking_information", {
+	id: serial("id").primaryKey().unique().notNull(),
+	firstname: varchar("firstname", { length: 64 }),
+	lastname: varchar("lastname", { length: 64}),
+	IBAN: varchar("IBAN", { length: 33 }),
+	BIC: varchar("BIC", { length: 11 }),
+
+})
+
+export const memberRelation = relations(members, ({ one }) => ({
+	banking: one(bankingInfo, {
+		fields: [members.bankingId],
+		references: [bankingInfo.id],
+	})
+}))
