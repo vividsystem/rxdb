@@ -1,11 +1,12 @@
 import { relations } from "drizzle-orm";
-import { integer, pgTable, timestamp, varchar, boolean, serial } from "drizzle-orm/pg-core";
+import { integer, pgTable, timestamp, varchar, boolean, serial, date } from "drizzle-orm/pg-core";
 
 export const members = pgTable("members", {
   id: serial("id").primaryKey().unique().notNull(),
 	member_since: timestamp("member_since"),
   firstname: varchar("firstname", { length: 64 }).notNull(),
   lastname: varchar("lastname", { length: 64 }).notNull(),
+	dateOfBirth: date("date_of_birth"),
 	telephone: varchar("telephone", {length: 22}),
 	email: varchar("email", { length: 320 }),
 	street: varchar("street", { length: 64 }),
@@ -14,7 +15,7 @@ export const members = pgTable("members", {
 	cert: boolean("certificate").default(false).notNull(),
 	yearOfExchange: varchar("year_of_exchange", { length: 9 }),
 	exchangeCountry: varchar("exchange_country", { length: 64 }),
-	bankingId: integer("banking_id").references(() => bankingInfo.id)
+	bankingId: integer("banking_id").notNull().references(() => bankingInfo.id)
 });
 
 

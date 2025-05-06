@@ -1,4 +1,4 @@
-import { For, JSX, ParentComponent, ParentProps, Show, createMemo, onMount } from "solid-js";
+import { For, JSX, Show, createMemo } from "solid-js";
 export interface Column<T> {
 	header: () => JSX.Element;
 	accessor: (item: T, index: number) => JSX.Element;
@@ -6,7 +6,6 @@ export interface Column<T> {
 interface TableProps<T> {
 	data: T[];
 	columns?: Column<T>[];
-	row?: ParentComponent<{item: T}>
 }
 
 
@@ -23,26 +22,14 @@ function Table<T extends Record<string, any>> (props: TableProps<T>) {
   });
 
 	
-
-	const DerivedRow = createMemo(() => {
-		if(props.row) return props.row
-		else return (props: ParentProps<{item: T}>) => (
-      <tr class="even:bg-white odd:bg-gray-100">
-				{props.children}
-			</tr>
-		)
-	})()
-
-
 	return (
-    <div class="overflow-x-auto overflow-y-auto">
       <table class="min-w-full divide-y divide-gray-200 table-fixed">
         <thead class="bg-gray-50 drop-shadow-gray-400 drop-shadow-xl sticky top-0">
           <tr>
             <For each={derivedColumns()}>{(col) => (
               <th
                 scope="col"
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
                 {col.header()}
               </th>
@@ -51,20 +38,21 @@ function Table<T extends Record<string, any>> (props: TableProps<T>) {
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
           <For each={props.data}>{(row, i) => (
-						<DerivedRow>
+						<tr class="even:bg-white odd:bg-gray-100">
               <For each={derivedColumns()}>{(col) => (
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-700 w-fit">
 								{col.accessor(row, i())}
                 </td>
               )}</For>
-						</DerivedRow>
+						</tr>
           )}</For>
+
+
+					<Show when={props.data.length === 0}>
+						<div class="p-4 text-center text-gray-500">No data available.</div>
+					</Show>
         </tbody>
       </table>
-      <Show when={props.data.length === 0}>
-        <div class="p-4 text-center text-gray-500">No data available.</div>
-      </Show>
-    </div>
   );
 }
 

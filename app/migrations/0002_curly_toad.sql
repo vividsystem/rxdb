@@ -1,0 +1,1 @@
+ALTER TABLE "members" ALTER COLUMN "banking_id" SET NOT NULL;

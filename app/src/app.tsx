@@ -9,7 +9,6 @@ export default function App() {
     <Router
       root={props => (
         <>
-					<nav></nav>
           <Suspense>{props.children}</Suspense>
         </>
       )}
