@@ -13,7 +13,7 @@ interface BankingPopUp extends PopUpProps {
 }
 
 function BankingPopUp(props: BankingPopUp) {
-	const [banking, setBanking] = createSignal<NewBanking>({ id: props.bankingId, 
+	const [banking, setBanking] = createSignal<NewBanking>({
 		firstname: null,
 		lastname: null,
 		IBAN: null,
@@ -27,10 +27,10 @@ function BankingPopUp(props: BankingPopUp) {
 	const submission = useSubmission(updateBanking)
 
 	return (
-		<PopUp visible={props.visible} setVisible={props.setVisible}>
+		<PopUp onClose={props.onClose}>
 			<Show when={banking()} fallback={"Loading..."}>
 			<form method="post">
-					<div class="absolute right-0 top-0 p-4" onClick={() => props.setVisible(false)}>
+					<div class="absolute right-0 top-0 p-4" onClick={props.onClose}>
 						<X class="size-8"/>
 					</div>
 					

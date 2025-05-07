@@ -71,7 +71,7 @@ export default function MembersLayout(props: RouteSectionProps) {
 			header: () => (<div class="flex flex-row gap-1 items-center"><Landmark class="size-4"/></div>),
 			accessor: (item: Member) => (
 			<MousePointer2 onClick={() => {
-				navigate("/banking/"+String(item.bankingId))
+				navigate("/members/banking/"+String(item.bankingId))
 			}}/>)
 		},
 		{

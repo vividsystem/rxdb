@@ -8,7 +8,7 @@
     - [x] make member table
     - [x] make rows clickable -> popup edit
     - [x] business logic for edits
-- [ ] create /members/banking/[id].tsx
+- [x] create /members/banking/[id].tsx
 - [ ] create /member/[id].tsx -> complete view no popups
 - [ ] make design responsive
 - [ ] Create Login Page -> vault for user handling
