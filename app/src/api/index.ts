@@ -1,5 +1,5 @@
 import { action, query } from "@solidjs/router";
-import { getMembers as gMs, getMember as gM, addMember as aM, updateMember as uM, deleteMember as dM, getBanking as gB, updateBanking as uB} from "./server";
+import { getMembers as gMs, getMember as gM, createMember as aM, updateMember as uM, deleteMember as dM, getBanking as gB, updateBanking as uB} from "./server";
 
 export const getMember = query(gM, "memberByID")
 export const getMembers = query(gMs, "members");

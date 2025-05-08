@@ -21,7 +21,7 @@ export default function MemberPage() {
 
   return (
 		<Show when={params.id && member()} >
-			<MemberEditPopUp  member={member()!} onClose={() => navigate("/members")}/>
+			<MemberEditPopUp member={member()!} onClose={() => navigate("/members")}/>
 		</Show>
   );
 }

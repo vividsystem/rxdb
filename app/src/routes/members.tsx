@@ -10,7 +10,7 @@ import Table, { Column } from "~/components/Table";
 
 export const route = {
   preload() {
-    getMembers();
+    //getMembers();
   }
 } satisfies RouteDefinition;
 
