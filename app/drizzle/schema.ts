@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { integer, pgTable, timestamp, varchar, boolean, serial, date } from "drizzle-orm/pg-core";
+import { integer, pgTable, timestamp, varchar, boolean, serial, date, uuid } from "drizzle-orm/pg-core";
 
 export const members = pgTable("members", {
   id: serial("id").primaryKey().unique().notNull(),
@@ -25,7 +25,6 @@ export const bankingInfo = pgTable("banking_information", {
 	lastname: varchar("lastname", { length: 64}),
 	IBAN: varchar("IBAN", { length: 33 }),
 	BIC: varchar("BIC", { length: 11 }),
-
 })
 
 export const memberRelation = relations(members, ({ one }) => ({
@@ -34,3 +33,10 @@ export const memberRelation = relations(members, ({ one }) => ({
 		references: [bankingInfo.id],
 	})
 }))
+
+export const shareTokens = pgTable("share_tokens", {
+	id: serial("id").primaryKey().unique().notNull(),
+	createdAt: timestamp("created_at").defaultNow().notNull(),
+	token: uuid("token").defaultRandom().notNull(),
+	memberId: integer("member_id").references(() => members.id).notNull()
+})

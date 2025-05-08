@@ -1,11 +1,12 @@
 "use server";
 import { eq } from "drizzle-orm";
-import { bankingInfo, members } from "../../drizzle/schema";
+import { bankingInfo, members, shareTokens } from "../../drizzle/schema";
 import { db } from "./db";
 
 
 export type Member = typeof members.$inferSelect
 export type BankingInfo = typeof bankingInfo.$inferSelect
+export type ShareToken = typeof shareTokens.$inferSelect
 
 export async function getMember(id: number) {
 	const res = await db.select().from(members).where(eq(members.id, id))
@@ -16,8 +17,9 @@ export async function getMembers(): Promise<Member[]> {
 }
 export type NewMember = Omit<typeof members.$inferInsert,  "id" | "bankingId"> 
 export type NewBanking = Omit<typeof bankingInfo.$inferInsert, "id">
+export type NewShareToken = Omit<typeof shareTokens.$inferInsert, "">
 
-export async function addMember(member: NewMember, banking: NewBanking) {
+export async function createMember(member: NewMember, banking: NewBanking) {
 	return await db.transaction(async (tx) => {
 		try {
 
@@ -49,4 +51,8 @@ export async function getBanking(id: BankingInfo["id"]) {
 
 export async function updateBanking(id: BankingInfo["id"], banking: NewBanking) {
 	await db.update(bankingInfo).set(banking).where(eq(members.id, id))
+}
+
+export async function createShare(id: Member["id"], member: NewMember) {
+	await db.update(members).set(member).where(eq(members.id, id))
 }
