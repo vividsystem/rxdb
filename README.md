@@ -2,19 +2,45 @@
 
 ## Roadmap
 
-- [x] Create DB Schema
-- [x] create docker compose w/ postgres 
-- [x] create member page
-    - [x] make member table
-    - [x] make rows clickable -> popup edit
-    - [x] business logic for edits
-- [x] create /members/banking/[id].tsx
-- [ ] create /member/[id].tsx -> complete view no popups
-- [ ] make design responsive
-- [ ] Create Login Page -> vault for user handling
-- [ ] link creation feature -> make links to send to members to edit their data
-- [ ] switch to a db with tde
-- [ ] add vault support for encryption at rest
-- [ ] fix table header
+## to mvp
+### programming 
+#### major 
+- [x] Create Login Page 
+    -> BetterAuth
+    - [x] magic links
+- [ ] remaking solid-start actions api into REST api 
+    - [x] member
+        - [x] zod validation
+    - [ ] banking
+        - [x] zod validation 
+- [ ] revamping route structure
+    - one single route for the table w/ edits, additions etc.
+    - implement `@kobalt/core` instead of relying on own popups 
+
+- [ ] zod for env
+- [ ] add logging  -> winston or pino
+- [ ] add rate limiting, csrf, etc.
+- [ ] export feature: export (partial) table -> select certain columns -> emails etc.
+- [ ] make design responsive/mobile support
+- [ ] role-based auth
+
+#### minor
+- [ ] feat: deny signup __before__ sending email
+- [ ] add BIC auto generation
+- [ ] add format validation for IBAN, BIC, year of exchange and phone number
+
+### deployment
+- [ ] make Dockerfile for app
+- [ ] postgres with tde
+- [ ] hashicorp vault for storing encryption keys and certs? 
 
 
+## to more features: 
+- [ ] events -> event colaboration
+    - online sign-up for attendees
+    - calendar exportation
+- todos and kanban?
+
+## to lunatic level features:
+- rxchat
+- rxvideo
