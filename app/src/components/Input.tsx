@@ -7,8 +7,9 @@ interface InputProps {
 	label: () => JSX.Element
 	value: () => Required<JSX.InputHTMLAttributes<HTMLInputElement>["value"]>
 	setValue: (val: string) => void
+	ref?: (el: HTMLInputElement | undefined) => void
 
-	opts?: Partial<Omit<JSX.InputHTMLAttributes<HTMLInputElement>, "type" | "value">>
+	opts?: Partial<Omit<JSX.InputHTMLAttributes<HTMLInputElement>, "type" | "value" | "ref" >>
 	class?: string
 }
 function Input(props: InputProps) {
@@ -16,7 +17,7 @@ function Input(props: InputProps) {
 	return (
 		<div class={"flex flex-col justify-items-start"+" "+props.class}>
 			<label for={props.name} class="font-bold px-2 py-1 h-fit">{props.label()}</label>
-			<input name={props.name} placeholder={props.placeholder} type={props.type} value={props.value()} onChange={(ev) => props.setValue(ev.currentTarget.value)} 
+			<input name={props.name} placeholder={props.placeholder} type={props.type} value={props.value()} onInput={(ev) => props.setValue(ev.currentTarget.value)} ref={props.ref} 
 				class="py-2 px-4 border-1 border-gray-200 shadow-gray-400 shadow-md"{...props.opts}
 			/>
 		</div>
