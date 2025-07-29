@@ -1,7 +1,7 @@
 export default {
   dialect: "postgresql",
 	out: "./migrations",
-  schema: "./drizzle/schema.ts",
+  schema: "./drizzle/",
 	dbCredentials: {
     url: process.env.DATABASE_URL!,
   },

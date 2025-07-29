@@ -1,42 +1,38 @@
-import {
-  useSubmission,
-  type RouteSectionProps
-} from "@solidjs/router";
-import { Show } from "solid-js";
-import { loginOrRegister } from "~/api";
+import { action, redirect, RouteDefinition } from "@solidjs/router";
+import { createEffect, createSignal, onMount } from "solid-js";
+import { authClient } from "~/lib/auth-client";
+import Input from "~/components/Input";
 
-export default function Login(props: RouteSectionProps) {
-  const loggingIn = useSubmission(loginOrRegister);
+
+export default function Login() {
+  let inputRef: HTMLInputElement | undefined;
+	const [email, setEmail] = createSignal("")
+	onMount(() => {
+		inputRef?.focus();
+	})
+
+
+	const login = async (email: string) => {
+		const {error} =  await authClient.signIn.magicLink({
+			email: email,
+			callbackURL: "/dashboard",
+
+			errorCallbackURL: "/error",
+		})
+		return error
+	}
 
   return (
-    <main>
-      <h1>Login</h1>
-      <form action={loginOrRegister} method="post">
-        <input type="hidden" name="redirectTo" value={props.params.redirectTo ?? "/"} />
-        <fieldset>
-          <legend>Login or Register?</legend>
-          <label>
-            <input type="radio" name="loginType" value="login" checked={true} /> Login
-          </label>
-          <label>
-            <input type="radio" name="loginType" value="register" /> Register
-          </label>
-        </fieldset>
-        <div>
-          <label for="username-input">Username</label>
-          <input name="username" placeholder="kody" autocomplete="username" />
-        </div>
-        <div>
-          <label for="password-input">Password</label>
-          <input name="password" type="password" placeholder="twixrox" autocomplete="current-password" />
-        </div>
-        <button type="submit">Login</button>
-        <Show when={loggingIn.result}>
-          <p style={{color: "red"}} role="alert" id="error-message">
-            {loggingIn.result!.message}
-          </p>
-        </Show>
-      </form>
+    <main class="w-full h-screen p-4 space-y-2 flex flex-col items-center">
+			Login
+			<form>
+				<Input type="email" name="email" placeholder="name@example.com" value={email} setValue={setEmail} label={() => "Email"} />
+				<button class="text-xl" onClick={async (e) => {
+					e.preventDefault()
+					const err = login(email())
+					console.log(err)
+				}}>Login</button>
+			</form>
     </main>
   );
 }

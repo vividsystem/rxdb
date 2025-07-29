@@ -23,5 +23,5 @@ CREATE TABLE IF NOT EXISTS "members" (
 	"banking_id" integer,
 	CONSTRAINT "members_id_unique" UNIQUE("id")
 );
---> statement-breakpoint
---ALTER TABLE "members" ADD CONSTRAINT "members_banking_id_banking_information_id_fk" FOREIGN KEY ("banking_id") REFERENCES "public"."banking_information"("id") ON DELETE no action ON UPDATE no action;
+> statement-breakpoint
+ALTER TABLE "members" ADD CONSTRAINT "members_banking_id_banking_information_id_fk" FOREIGN KEY ("banking_id") REFERENCES "public"."banking_information"("id") ON DELETE no action ON UPDATE no action;
