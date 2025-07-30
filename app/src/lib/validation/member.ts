@@ -1,7 +1,11 @@
 import { z } from "zod";
 import { defaultString } from ".";
 
+
+export const memberId = z.uuid()
+
 export const memberSchema = z.object({
+	id: memberId,
 	firstname: defaultString,
 	lastname: defaultString,
 	dateOfBirth: z.iso.date(),
@@ -14,11 +18,8 @@ export const memberSchema = z.object({
 	yearOfExchange: z.string().trim().length(9),
 	exchangeCountry: defaultString,
 	bankingId: z.number().int().positive()
-}).strip()
+}).strict()
 
-export const createMemberInput = memberSchema.extend({
-	cert: z.boolean().optional()
-})
+export const createMemberInput = memberSchema.extend({ cert: z.boolean().optional() }).omit({ id: true }).strip()
 
-export const memberId = z.uuid()
 export const updateMemberInput = createMemberInput.partial().strip()
