@@ -1,8 +1,11 @@
 import z from "zod"
 import { memberSchema, createMemberInput } from "../validation/member"
+import { createBanking } from "./banking"
+import { createBankingSchema } from "../validation/banking"
 
+const MEMBER_ROUTE = "/api/members/"
 export async function getMembers() {
-	const res = await fetch(process.env.API_HOST + "/api/members")
+	const res = await fetch(process.env.API_HOST + MEMBER_ROUTE)
 	const body = await res.json()
 
 	const member = memberSchema.array().safeParse(body.members)
@@ -14,7 +17,7 @@ export async function getMembers() {
 }
 
 export async function createMember(member: z.infer<typeof createMemberInput>) {
-	const res = await fetch(process.env.API_HOST + "/api/members", { method: "POST", body: JSON.stringify(member) })
+	const res = await fetch(process.env.API_HOST + MEMBER_ROUTE, { method: "POST", body: JSON.stringify(member) })
 	const body = await res.json()
 
 
@@ -25,4 +28,13 @@ export async function createMember(member: z.infer<typeof createMemberInput>) {
 	}
 
 	return memberParser.data
+}
+
+export async function createMemberWithBanking(member: Omit<z.infer<typeof createMemberInput>, "bankingId">, banking: z.infer<typeof createBankingSchema>) {
+	
+	const bankingInfo = await createBanking(banking)
+
+	const newMember = await createMember({ ...member, bankingId: bankingInfo.id })
+
+	return { member: newMember, bankingInfo: bankingInfo }
 }
