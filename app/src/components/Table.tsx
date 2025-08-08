@@ -36,7 +36,7 @@ function Table<T extends Record<string, any>> (props: TableProps<T>) {
             )}</For>
           </tr>
         </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
+        <tbody class="bg-white divide-y divide-gray-200 w-full">
           <For each={props.data}>{(row, i) => (
 						<tr class="even:bg-white odd:bg-gray-100">
               <For each={derivedColumns()}>{(col) => (
@@ -49,7 +49,9 @@ function Table<T extends Record<string, any>> (props: TableProps<T>) {
 
 
 					<Show when={props.data.length === 0}>
-						<div class="p-4 text-center text-gray-500">No data available.</div>
+						<tr>
+							<td colspan={derivedColumns().length} class="p-4 text-2xl text-center text-gray-500">No data available.</td>
+						</tr>
 					</Show>
         </tbody>
       </table>

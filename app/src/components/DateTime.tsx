@@ -1,5 +1,5 @@
 interface DateTimeProps {
-	date: Date
+	date: Date | string
 }
 export function DateTime(props: DateTimeProps) {
 	return (<>

@@ -1,5 +1,5 @@
 
-import { members } from "@/schema";
+import { members } from "../../../../drizzle/schema";
 import { json } from "@solidjs/router";
 import type { APIEvent } from "@solidjs/start/server";
 import { eq } from "drizzle-orm";
@@ -23,7 +23,7 @@ export async function GET({ params }: APIEvent) {
 	}, { status: 200 })
 }
 
-export async function UPDATE({ request, params }: APIEvent) {
+export async function PATCH({ request, params }: APIEvent) {
 	const idResult = memberId.safeParse(params.id);
 
 	if (!idResult.success) {
@@ -43,19 +43,6 @@ export async function UPDATE({ request, params }: APIEvent) {
 	}
 
 	return json({ member: member[0]}, { status: 200 })
-}
-
-export async function CREATE({ request }: APIEvent) {
-	const body = await request.json();
-  const result = createMemberInput.safeParse(body);
-
-	if (!result.success) {
-    return json({ errors: z.formatError(result.error) }, { status: 400 });
-  }
-
-	const member = await db.insert(members).values(result.data).returning()
-
-	return json({ member: member[0] }, { status: 201 })
 }
 
 export async function DELETE({ params }: APIEvent) {

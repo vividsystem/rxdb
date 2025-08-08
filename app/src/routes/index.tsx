@@ -1,9 +1,9 @@
-import { A } from "@solidjs/router";
+import { A, RouteSectionProps } from "@solidjs/router";
 
-export default function Home() {
+export default function Index(props: RouteSectionProps) {
   return (
-    <main class="w-full h-screen p-4 space-y-2 flex flex-col items-center">
-			<A href="/members">Members</A>
-    </main>
+		<>
+			<A href="/app">Go to the app</A>
+		</>
   );
 }

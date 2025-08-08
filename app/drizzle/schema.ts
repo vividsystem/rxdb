@@ -5,9 +5,9 @@ import { user } from "./schema-auth";
 export const members = pgTable("members", {
   id: uuid("id").primaryKey().defaultRandom(),
 	userId: text("user_id").references(() => user.id).unique(),
-	
-	member_since: timestamp("member_since"),
-  firstname: varchar("firstname", { length: 64 }).notNull(),
+	verified: boolean("verified").default(false).notNull(),	
+	memberSince: date("member_since"), 
+	firstname: varchar("firstname", { length: 64 }).notNull(),
   lastname: varchar("lastname", { length: 64 }).notNull(),
 	dateOfBirth: date("date_of_birth"),
 	telephone: varchar("telephone", {length: 22}),

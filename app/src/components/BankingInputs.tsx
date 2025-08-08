@@ -1,10 +1,11 @@
-import { Accessor, Setter } from "solid-js";
+import { Accessor, Setter, useContext } from "solid-js";
 import Input from "./Input";
 import { BankingInfo, NewBanking } from "~/api/server";
+import { BankingContext } from "~/lib/contexts/banking";
 
 interface BankingInputsProps {
-	banking: NewBanking
-	setBanking: Setter<NewBanking>
+	banking: Partial<BankingInfo>
+	setBanking: (updated: Partial<BankingInfo>) => void
 }
 export default function BankingInputs(props: BankingInputsProps) {
 	return (

@@ -6,7 +6,7 @@ import {
   boolean,
   integer,
 } from "drizzle-orm/pg-core";
-
+// better-auth boilerplate
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),

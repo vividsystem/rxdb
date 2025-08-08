@@ -1,4 +1,11 @@
 services:
+  vault-dev:
+    cap_add:
+      - IPC_LOCK
+    image: vault:lastest
+    environment:
+      VAULT_ADDR: "http://0.0.0.0:8200"
+      VAULT_DEV_ROOT_TOKEN_ID: ${VAULT_DEV_ROOT} 
   db-dev:
     ports:
       - 5432:5432
@@ -7,6 +14,10 @@ services:
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: dev
+  db-prod:
+    # ...
+    image: postgres:latest
+    restart: always
     volumes:
       - db-data:/var/lib/postgresql/data
 
