@@ -16,6 +16,15 @@ export async function getMembers(): Promise<Member[]> {
 
 	return body.members as Member[]
 }
+export async function getPendingMembers(): Promise<Member[]> {
+	const res = await fetch(`${url(MEMBERS_ROUTE)}/pending`)
+	if(!res.ok) {
+		throw res
+	}
+	const body = await res.json()
+
+	return body.members as Member[]
+}
 
 export async function createMember(member: z.infer<typeof createMemberInput>): Promise<Member> {
 	const res = await fetch(url(MEMBER_ROUTE), { 
