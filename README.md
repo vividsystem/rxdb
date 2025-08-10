@@ -16,8 +16,8 @@
 - [x] revamping route structure
     - one single route for the table w/ edits, additions etc.
     - implement `@kobalt/core` instead of relying on own popups 
-
-- [ ] zod for env
+- [x] change login to login/register site
+- [ ] make callback site for new users -> input member info
 - [ ] add logging  -> winston or pino
 - [ ] add rate limiting, csrf, etc.
 - [ ] export feature: export (partial) table -> select certain columns -> emails etc.
@@ -25,6 +25,7 @@
 - [ ] role-based auth
 
 #### minor
+- [ ] zod for env
 - [ ] feat: deny signup __before__ sending email
 - [ ] add BIC auto generation
 - [ ] add format validation for IBAN, BIC, year of exchange and phone number
