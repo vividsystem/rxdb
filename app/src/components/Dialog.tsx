@@ -4,10 +4,11 @@ import { JSX, ParentProps } from "solid-js";
 
 interface DialogProps {
 	trigger: JSX.Element
+	onOpenChange?: (open: boolean) => void
 }
 export default function Dialog(props: ParentProps<DialogProps>) {
 	return (
-		<KobalteDialog>
+		<KobalteDialog onOpenChange={props.onOpenChange}>
 			<KobalteDialog.Trigger class="">
 				{props.trigger}
 			</KobalteDialog.Trigger>

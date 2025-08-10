@@ -16,7 +16,7 @@ import { createStore } from "solid-js/store";
 export function MemberAddDialog() {
 	const [member, setMember] = createStore<Partial<Member>>({});
 
-	const {banking} = useContext(BankingContext);
+	const {banking, setBanking} = useContext(BankingContext);
 	const handleCreation: JSX.EventHandlerUnion<HTMLFormElement, SubmitEvent, JSX.EventHandler<HTMLFormElement, SubmitEvent>> = async (e) => {
 		e.preventDefault()
 		const memberParser = createMemberInput.omit({bankingId: true}).safeParse(member)
@@ -45,7 +45,7 @@ export function MemberAddDialog() {
 						<MemberInputs member={member} setMember={setMember}/>
 					</div>
 					<div>
-						<BankingInputs />
+						<BankingInputs banking={banking} setBanking={setBanking}/>
 					</div>
 
 					<div class="flex flex-row gap-2 py-4">
@@ -61,27 +61,51 @@ export function MemberAddDialog() {
 export function MemberEditDialog() {
 	const {member} = useContext(MemberContext)
 	const [localMember, setLocalMember] = createSignal(member)
+	const [loading, setLoading] = createSignal(false)
+	const [finished, setFinished] = createSignal(false)
 
-	const update = action(async () => {
+	const buttonMessage = () => {
+		switch (true){
+			case loading():
+				return "Editing"
+			case finished():
+				return "Edited"
+			case !(finished() || loading()):
+				return "Edit"
+
+		}
+	}
+
+	const update = (async () => {
 		console.log("UPDATE")
-		const parser = memberSchema.omit({bankingId: true}).safeParse(localMember())
+		setFinished(false)
+		setLoading(true)
+		const parser = memberSchema.omit({bankingId: true }).safeParse(localMember())
 		if(!parser.success) {
+			setLoading(false)
 			throw (z.formatError(parser.error))
 		}
 		const {id, ...rest} = parser.data
-		return await updateMember(id, rest)
+		await updateMember(id, rest)
+		setLoading(false)
+		setFinished(true)
 	})
-	const submission = useSubmission(update)
 	return (
 		<Dialog trigger={
 			<Pencil />		
-		}>
-			<form method="post" action={update}>
+		} onOpenChange={(open) => {
+			if(open) {
+				setFinished(false)
+				setLoading(false)
+			}
+		}}>
+			<form>
 				<MemberInputs member={localMember()} setMember={setLocalMember}/>
 				<div class="flex flex-row gap-2 py-4">
-					<button type="submit" class="py-2 px-4 border-1 border-green-200 shadow-md shadow-green-400 bg-green-400" onClick={(e) => {
-						//e.preventDefault()
-					}}>{submission.pending ? "Editing": "Edit"}</button>
+					<button type="submit" class="py-2 px-4 border-1 border-green-200 shadow-md shadow-green-400 bg-green-400" onClick={async (e) => {
+						e.preventDefault()
+						return await update()
+					}}>{buttonMessage()}</button>
 				</div>
 			</form>
 		</Dialog>

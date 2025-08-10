@@ -11,9 +11,9 @@
 - [ ] remaking solid-start actions api into REST api 
     - [x] member
         - [x] zod validation
-    - [ ] banking
+    - [x] banking
         - [x] zod validation 
-- [ ] revamping route structure
+- [x] revamping route structure
     - one single route for the table w/ edits, additions etc.
     - implement `@kobalt/core` instead of relying on own popups 
 
@@ -28,6 +28,7 @@
 - [ ] feat: deny signup __before__ sending email
 - [ ] add BIC auto generation
 - [ ] add format validation for IBAN, BIC, year of exchange and phone number
+- [ ] add local store to member table for "hot reload" -> remove verified members from table on edit
 
 ### deployment
 - [ ] make Dockerfile for app

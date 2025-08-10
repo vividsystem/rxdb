@@ -49,7 +49,12 @@ export function BankingEditDialog(props: BankingEditDialogProps) {
 	return (
 		<Dialog trigger={
 			<MousePointer2 />		
-		}>
+		} onOpenChange={(open) => {
+			if(open) {
+				setFinished(false)
+				setLoading(false)
+			}
+		}}>
 				
 			<form>
 				<BankingInputs banking={localBanking()} setBanking={setLocalBanking}/>
@@ -60,6 +65,6 @@ export function BankingEditDialog(props: BankingEditDialogProps) {
 					}}>{buttonMessage()}</button>
 				</div>
 			</form>
-		</Dialog>
+	</Dialog>
 	)
 }
