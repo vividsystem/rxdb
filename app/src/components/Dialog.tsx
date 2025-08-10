@@ -17,7 +17,7 @@ export default function Dialog(props: ParentProps<DialogProps>) {
 
 				<div class="fixed z-50 inset-0 flex justify-center items-center">
 				<KobalteDialog.Content>
-							<div class="isolate border-2 border-black p-4 w-fit bg-white shadow-xl shadow-gray-400 relative">
+							<div class="isolate relative container">
 							<KobalteDialog.CloseButton class="absolute right-0 top-0 p-4">
 									<X class="size-8"/>
 							</KobalteDialog.CloseButton>

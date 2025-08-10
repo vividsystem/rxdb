@@ -34,7 +34,7 @@ export function MemberAddDialog() {
 	}
 	return (
 		<Dialog trigger={(
-			<div class="w-fit px-4 py-4 border-gray-200 shadow-gray-400 shadow-md">
+			<div class="w-fit btn shadow-md">
 				<Plus />
 			</div>
 		)}>
