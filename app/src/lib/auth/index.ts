@@ -57,8 +57,13 @@ export async function requireUser(event: APIEvent) {
   });
 
   if (!session?.user) {
-		return json({ message: "Unauthorized" }, { status: 401 })
+		return
   }
+	
+	const member = await db.select().from(members).where(eq(members.id, session.user.email))
+	if(member.length < 1) {
+		return
+	}
 
-  return session.user;
+  return {user: session.user, member: member[0]};
 }
