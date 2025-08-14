@@ -3,10 +3,10 @@ import { betterAuth } from "better-auth";
 import { APIError } from "better-auth/api";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { magicLink } from "better-auth/plugins";
-import { db } from "./db";
-import { sendMagicMail } from "./mail";
-import { account, user, session, verification } from "../../drizzle/schema-auth"
-import { members } from "../../drizzle/schema";
+import { db } from "../db";
+import { sendMagicMail } from "../mail";
+import { account, user, session, verification } from "../../../drizzle/schema-auth"
+import { members } from "../../../drizzle/schema";
 import { eq } from "drizzle-orm";
 import { redirect } from "@solidjs/router";
 
