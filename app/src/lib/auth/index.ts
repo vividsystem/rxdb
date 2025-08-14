@@ -8,7 +8,8 @@ import { sendMagicMail } from "../mail";
 import { account, user, session, verification } from "../../../drizzle/schema-auth"
 import { members } from "../../../drizzle/schema";
 import { eq } from "drizzle-orm";
-import { redirect } from "@solidjs/router";
+import type { APIEvent } from "@solidjs/start/server";
+import { json } from "@solidjs/router";
 
 export const auth = betterAuth({
 	databaseHooks: {
@@ -50,13 +51,13 @@ export const auth = betterAuth({
   ],
 });
 
-export async function requireUser(event: { request: Request }) {
+export async function requireUser(event: APIEvent) {
   const session = await auth.api.getSession({
     headers: event.request.headers,
   });
 
   if (!session?.user) {
-    throw redirect("/login");
+		return json({ message: "Unauthorized" }, { status: 401 })
   }
 
   return session.user;
