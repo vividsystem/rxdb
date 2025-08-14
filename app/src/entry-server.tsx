@@ -1,6 +1,12 @@
 // @refresh reload
 import { StartServer, createHandler } from "@solidjs/start/server";
+import { seedPermissions } from "./lib/db/seedPermissions";
 
+if (process.env.NODE_ENV === "development") {
+  seedPermissions()
+    .then(() => console.log("Permissions seeded ✅"))
+    .catch(console.error);
+}
 export default createHandler(() => (
   <StartServer
     document={({ assets, children, scripts }) => (
