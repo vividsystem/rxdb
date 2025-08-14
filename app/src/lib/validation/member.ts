@@ -19,7 +19,6 @@ export const memberSchema = z.object({
 	cert: z.boolean().default(false),
 	yearOfExchange: z.string().trim().length(9),
 	exchangeCountry: defaultString,
-	bankingId: z.number().int().positive()
 }).strip()
 
 export const createMemberInput = memberSchema.extend({ cert: z.boolean().optional() }).omit({ id: true }).strip()

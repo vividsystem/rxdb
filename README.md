@@ -17,6 +17,12 @@
     - one single route for the table w/ edits, additions etc.
     - implement `@kobalt/core` instead of relying on own popups 
 - [x] change login to login/register site
+- [ ] rbac
+    - [x] add auth to backend
+        - [x] members
+        - [ ] banking
+    - [ ] add role managment panel to front-end
+    - [ ] add auth to front-end protected routes
 - [ ] make callback site for new users -> input member info
 - [ ] add logging  -> winston or pino
 - [ ] add rate limiting, csrf, etc.
@@ -30,7 +36,7 @@
 - [ ] add BIC auto generation
 - [ ] add format validation for IBAN, BIC, year of exchange and phone number
 - [ ] add local store to member table for "hot reload" -> remove verified members from table on edit
-- [ ] change db schema to have a memberId in banking with on delete cascade instead of a banking id in member
+- [x] change db schema to have a memberId in banking with on delete cascade instead of a banking id in member
 
 ### deployment
 - [ ] make Dockerfile for app
