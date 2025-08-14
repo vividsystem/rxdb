@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { integer, timestamp, varchar, boolean, serial, date, uuid, text, pgTable } from "drizzle-orm/pg-core";
+import { integer, varchar, boolean, serial, date, uuid, text, pgTable } from "drizzle-orm/pg-core";
 
 import { user } from "./schema-auth";
 export const members = pgTable("members", {
@@ -40,3 +40,24 @@ export const memberRelation = relations(members, ({ one }) => ({
 		references: [user.id]
 	})
 }))
+
+// role-based auth
+export const roles = pgTable("roles", {
+	id: serial("id").primaryKey().unique().notNull(),
+	name: varchar("name").unique().notNull(),
+})
+
+export const permissions = pgTable("permissions", {
+	id: serial("id").primaryKey().unique().notNull(),
+	name: varchar("name").unique().notNull(),
+})
+
+export const memberRoles = pgTable("member_roles", {
+	memberId: uuid("member_id").references(() => members.id).notNull(),
+	roleId: serial("role_id").references(() => roles.id).notNull()
+})
+
+export const rolePermissions = pgTable("role_permissions", {
+	roleId: serial("role_id").references(() => roles.id).notNull(),
+	permissionId: serial("permission_id").references(() => permissions.id).notNull()
+})
