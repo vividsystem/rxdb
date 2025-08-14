@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "vinxi dev",
     "build": "vinxi build",
-    "start": "vinxi start"
+    "start": "vinxi start",
+		"seed:permissions": "ts-node ./src/lib/db/seedPermissions.ts"
   },
   "devDependencies": {
     "@types/node": "^22.15.17",
