@@ -30,6 +30,7 @@
 - [ ] add BIC auto generation
 - [ ] add format validation for IBAN, BIC, year of exchange and phone number
 - [ ] add local store to member table for "hot reload" -> remove verified members from table on edit
+- [ ] change db schema to have a memberId in banking with on delete cascade instead of a banking id in member
 
 ### deployment
 - [ ] make Dockerfile for app
