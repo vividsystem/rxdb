@@ -1,3 +1,4 @@
+"use server";
 import { betterAuth } from "better-auth";
 import { APIError } from "better-auth/api";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
@@ -7,6 +8,7 @@ import { sendMagicMail } from "./mail";
 import { account, user, session, verification } from "../../drizzle/schema-auth"
 import { members } from "../../drizzle/schema";
 import { eq } from "drizzle-orm";
+import { redirect } from "@solidjs/router";
 
 export const auth = betterAuth({
 	databaseHooks: {
@@ -47,3 +49,15 @@ export const auth = betterAuth({
     }),
   ],
 });
+
+export async function requireUser(event: { request: Request }) {
+  const session = await auth.api.getSession({
+    headers: event.request.headers,
+  });
+
+  if (!session?.user) {
+    throw redirect("/login");
+  }
+
+  return session.user;
+}
