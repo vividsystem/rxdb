@@ -9,7 +9,6 @@ import { account, user, session, verification } from "../../../drizzle/schema-au
 import { members } from "../../../drizzle/schema";
 import { eq } from "drizzle-orm";
 import type { APIEvent } from "@solidjs/start/server";
-import { json } from "@solidjs/router";
 
 export const auth = betterAuth({
 	databaseHooks: {
@@ -51,16 +50,17 @@ export const auth = betterAuth({
   ],
 });
 
-export async function requireUser(event: APIEvent) {
-  const session = await auth.api.getSession({
+export async function requireUser(event: APIEvent) { 
+	const session = await auth.api.getSession({
     headers: event.request.headers,
   });
 
   if (!session?.user) {
+		console.log(JSON.stringify(session))
 		return
   }
 	
-	const member = await db.select().from(members).where(eq(members.id, session.user.email))
+	const member = await db.select().from(members).where(eq(members.email, session.user.email))
 	if(member.length < 1) {
 		return
 	}
