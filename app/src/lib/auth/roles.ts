@@ -1,6 +1,6 @@
 "use server";
 
-import { memberRoles, permissions, rolePermissions } from "@/schema";
+import { memberRoles, permissions, rolePermissions } from "../../../drizzle/schema";
 import { eq } from "drizzle-orm";
 import { db } from "../db";
 import { Permission } from "../db/permissions";
