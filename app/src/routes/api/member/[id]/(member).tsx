@@ -1,13 +1,12 @@
-
-import { members } from "../../../../drizzle/schema";
+import { members } from "../../../../../drizzle/schema";
 import { json } from "@solidjs/router";
 import type { APIEvent } from "@solidjs/start/server";
 import { eq } from "drizzle-orm";
 import z from "zod";
 import { requireUser } from "~/lib/auth";
-import { getMemberPermissions, hasPermission } from "~/lib/auth/roles";
+import { hasPermission } from "~/lib/auth/roles";
 import { db } from "~/lib/db";
-import { createMemberInput, memberId, updateMemberInput } from "~/lib/validation/member";
+import { memberId, updateMemberInput } from "~/lib/validation/member";
 export async function GET(event: APIEvent) {
 	const { params } = event
 	const idResult = memberId.safeParse(params.id);
