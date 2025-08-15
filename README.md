@@ -20,9 +20,13 @@
 - [ ] rbac
     - [x] add auth to backend
         - [x] members
-        - [ ] banking
+        - [x] banking
+    - [x] add /member/:id/banking routes
+    - [ ] add front-end support for new routes
+    - [ ] delete old banking api routes -> maybe even remove delete banking routes (auto deletes w/ cascade)
     - [ ] add role managment panel to front-end
     - [ ] add auth to front-end protected routes
+- [ ] fix error handling between api and front-end => custom error type?
 - [ ] make callback site for new users -> input member info
 - [ ] add logging  -> winston or pino
 - [ ] add rate limiting, csrf, etc.
@@ -37,6 +41,8 @@
 - [ ] add format validation for IBAN, BIC, year of exchange and phone number
 - [ ] add local store to member table for "hot reload" -> remove verified members from table on edit
 - [x] change db schema to have a memberId in banking with on delete cascade instead of a banking id in member
+- [ ] fix @/schema import bug
+- [ ] change email equality check between user and email to memberId in requireUser
 
 ### deployment
 - [ ] make Dockerfile for app
