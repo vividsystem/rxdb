@@ -8,13 +8,18 @@ const MEMBERS_ROUTE = "/api/members"
 const MEMBER_ROUTE = "/api/member"
 
 export async function getMembers(): Promise<Member[]> {
-	const res = await fetch(url(MEMBERS_ROUTE))
-	if(!res.ok) {
-		throw res
-	}
-	const body = await res.json()
+	const res = await fetch(url(MEMBERS_ROUTE), { credentials: "include" })
+	try {
+		const body = await res.json()
+		if(!res.ok) {
+			throw new Error(`request failed with status ${res.status} and body ${JSON.stringify(body)}`)	
+		}
 
-	return body.members as Member[]
+		return body.members as Member[]
+	} catch (e) {
+		throw e
+	}
+
 }
 export async function getPendingMembers(): Promise<Member[]> {
 	const res = await fetch(`${url(MEMBERS_ROUTE)}/pending`)
@@ -44,9 +49,10 @@ export async function createMember(member: z.infer<typeof createMemberInput>): P
 
 export async function createMemberWithBanking(member: Omit<z.infer<typeof createMemberInput>, "bankingId">, banking: z.infer<typeof createBankingSchema>): Promise<{ member: Member, bankingInfo: BankingInfo }> {
 	
-	const bankingInfo = await createBanking(banking)
 
-	const newMember = await createMember({ ...member, bankingId: bankingInfo.id })
+	const newMember = await createMember({ ...member })
+	const bankingInfo = await createBanking({ ...banking, memberId: newMember.id })
+
 
 	return { member: newMember, bankingInfo: bankingInfo }
 }
