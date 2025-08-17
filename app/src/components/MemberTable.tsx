@@ -1,28 +1,13 @@
-import { createEffect, createResource, createSignal, Show, useContext } from "solid-js"
+import { createSignal, Show } from "solid-js"
 import Table, { Column } from "~/components/Table"
 import { Calendar, Phone, AtSign, MapPin, Check, Landmark, X } from "lucide-solid"
 import { MemberAddDialog, MemberEditDialog } from "./MemberDialog"
-import { MemberContext } from "~/lib/contexts/member"
 import { Member } from "~/lib/validation/member"
-import { BankingContext } from "~/lib/contexts/banking"
-import { getBanking } from "~/lib/api/banking"
 import { BankingEditDialog } from "./BankingDialog"
-import { createAsync, query, revalidate } from "@solidjs/router"
-import { getMembers, getPendingMembers } from "~/lib/api/members"
 
-const membersQuery = query(async (_prev) => await getMembers(), "members"); 
-const pendingMembersQuery = query(async (_prev) => await getPendingMembers(), "pendingMembers"); 
 
 export function MemberColumns() {
-	const {member, setMember} = useContext(MemberContext)
-	const {setBanking} = useContext(BankingContext)
-	const [banking] = createResource(() => member.bankingId, getBanking)
 
-	createEffect(() => {
-		if(banking()) {
-			setBanking(banking()!)
-		}
-	})
 	const cols: Column<Member>[] = [
 		{
 			header: () => ("ID"),
@@ -70,18 +55,12 @@ export function MemberColumns() {
 		}, 
 		{
 			header: () => (<div class="flex flex-row gap-1 items-center"><Landmark class="size-4"/></div>),
-			accessor: (item: Member) => (
-				<div onClick={() => setMember(item)}>
-					<BankingEditDialog />
-				</div>
-			)
+			accessor: (item) => (<BankingEditDialog memberId={item.id}/>)
 		},
 		{
 			header: () => (""),
 			accessor: (item: Member) => (
-				<div onClick={() => setMember(item)}>
-					<MemberEditDialog/>
-				</div>
+					<MemberEditDialog member={item}/>
 			)
 		}
 	]
@@ -90,10 +69,10 @@ export function MemberColumns() {
 
 
 interface MemberTableProps {
+	members?: Member[]
+	pendingMembers?: Member[]
 }
-export default function MemberTable(_props: MemberTableProps) {
-	const members = createAsync(membersQuery)
-	const pendingMembers = createAsync(pendingMembersQuery)
+export default function MemberTable(props: MemberTableProps) {
 	const [normalTab, setNormalTab] = createSignal(true)
 	return (
 		<>
@@ -106,7 +85,6 @@ export default function MemberTable(_props: MemberTableProps) {
 					<div class="px-8 border-b-4 hover:border-b-gray-400 hover:text-b-gray-400" 
 						onClick={() => {
 							setNormalTab(true)
-							revalidate(membersQuery.key)
 						}} classList={{
 							"text-black border-b-black": normalTab(),
 							"text-gray-300": !normalTab()
@@ -116,7 +94,6 @@ export default function MemberTable(_props: MemberTableProps) {
 						class="px-8 border-b-4 hover:border-b-gray-400 hover:text-b-gray-400" 
 						onClick={() => {
 							setNormalTab(false)
-							revalidate(pendingMembersQuery.key)
 						}} classList={{
 						"text-black border-b-4 border-b-black": !normalTab(),
 						"text-gray-300": normalTab()
@@ -127,15 +104,15 @@ export default function MemberTable(_props: MemberTableProps) {
 				</div>
 			</div>
 			<Show when={normalTab()} fallback={
-				<Show when={pendingMembers()} fallback={"Loading..."}>
+				<Show when={props.pendingMembers !== undefined} fallback={"Loading..."}>
 					<div class="w-full h-4/5 overflow-scroll overflow-y-scroll drop-shadow-xl drop-shadow-gray-400 rounded-md">	
-						<Table data={pendingMembers()!} columns={MemberColumns()}/>
+						<Table data={props.pendingMembers!} columns={MemberColumns()}/>
 					</div>
 				</Show>
 			}>
-			<Show when={members()} fallback={"Loading..."}>
+			<Show when={props.members !== undefined} fallback={"Loading..."}>
 				<div class="w-full h-4/5 overflow-scroll overflow-y-scroll drop-shadow-xl drop-shadow-gray-400 rounded-md">	
-					<Table data={members()!} columns={MemberColumns()}/>
+					<Table data={props.members!} columns={MemberColumns()}/>
 				</div>
 			</Show>
 			</Show>

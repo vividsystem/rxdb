@@ -6,7 +6,7 @@ import { z } from "zod";
 import { requireUser } from "~/lib/auth";
 import { hasPermission } from "~/lib/auth/roles";
 import { db } from "~/lib/db";
-import { bankingId, updateBankingSchema } from "~/lib/validation/banking";
+import { updateBankingSchema } from "~/lib/validation/banking";
 import { memberId } from "~/lib/validation/member";
 
 export async function GET(event: APIEvent) {
@@ -31,6 +31,10 @@ export async function GET(event: APIEvent) {
 
 	return json({ banking: banking[0] }, { status: 200 })
 
+}
+
+export async function POST(event: APIEvent) {
+	
 }
 
 

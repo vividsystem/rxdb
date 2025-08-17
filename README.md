@@ -26,13 +26,14 @@
     - [ ] delete old banking api routes -> maybe even remove delete banking routes (auto deletes w/ cascade)
     - [ ] add role managment panel to front-end
     - [ ] add auth to front-end protected routes
-- [ ] fix error handling between api and front-end => custom error type?
+- [x] fix error handling between api and front-end => custom error type?
 - [ ] make callback site for new users -> input member info
 - [ ] add logging  -> winston or pino
 - [ ] add rate limiting, csrf, etc.
 - [ ] export feature: export (partial) table -> select certain columns -> emails etc.
 - [ ] make design responsive/mobile support
 - [ ] role-based auth
+- [ ] add alerts when error occur
 
 #### minor
 - [ ] zod for env
@@ -43,6 +44,7 @@
 - [x] change db schema to have a memberId in banking with on delete cascade instead of a banking id in member
 - [ ] fix @/schema import bug
 - [ ] change email equality check between user and email to memberId in requireUser
+
 
 ### deployment
 - [ ] make Dockerfile for app

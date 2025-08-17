@@ -2,7 +2,7 @@ import Dialog from "./Dialog";
 import MemberInputs from "./MemberInputs";
 import BankingInputs from "./BankingInputs";
 import { createMemberWithBanking, updateMember } from "../lib/api/members"
-import { useContext, JSX, createSignal } from "solid-js";
+import { useContext, JSX, createSignal, Setter } from "solid-js";
 import { MemberContext } from "~/lib/contexts/member";
 import { BankingContext } from "~/lib/contexts/banking";
 import { memberSchema, createMemberInput, Member } from "~/lib/validation/member";
@@ -29,8 +29,7 @@ export function MemberAddDialog() {
 			throw (z.formatError(bankingParser.error))
 		}
 
-		const res = await createMemberWithBanking(memberParser.data, bankingParser.data)
-		console.log(res)
+		await createMemberWithBanking(memberParser.data, bankingParser.data)
 	}
 	return (
 		<Dialog trigger={(
@@ -57,10 +56,11 @@ export function MemberAddDialog() {
 	)
 }
 
-
-export function MemberEditDialog() {
-	const {member} = useContext(MemberContext)
-	const [localMember, setLocalMember] = createSignal(member)
+interface MemberEditDialogProps {
+	member: Member
+}
+export function MemberEditDialog(props: MemberEditDialogProps) {
+	const [localMember, setLocalMember] = createSignal(props.member)
 	const [loading, setLoading] = createSignal(false)
 	const [finished, setFinished] = createSignal(false)
 
@@ -77,7 +77,6 @@ export function MemberEditDialog() {
 	}
 
 	const update = (async () => {
-		console.log("UPDATE")
 		setFinished(false)
 		setLoading(true)
 		const parser = memberSchema.safeParse(localMember())
