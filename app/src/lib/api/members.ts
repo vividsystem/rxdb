@@ -3,17 +3,20 @@ import { createMemberInput, Member, memberId, updateMemberInput } from "../valid
 import { createBanking } from "./banking"
 import { BankingInfo, createBankingSchema } from "../validation/banking"
 import { url } from "./helpers"
+import { APIError } from "./errors"
 
-const MEMBERS_ROUTE = "/api/members"
-const MEMBER_ROUTE = "/api/member"
+export const MEMBERS_ROUTE = "/api/members"
+export const MEMBER_ROUTE = "/api/member"
 
 export async function getMembers(): Promise<Member[]> {
-	const res = await fetch(url(MEMBERS_ROUTE), { credentials: "include" })
+	const res = await fetch(url(MEMBERS_ROUTE), { 
+		credentials: "include",
+	})
+	if(!res.ok) {
+		throw await APIError.fromResponse(res)
+	}
 	try {
 		const body = await res.json()
-		if(!res.ok) {
-			throw new Error(`request failed with status ${res.status} and body ${JSON.stringify(body)}`)	
-		}
 
 		return body.members as Member[]
 	} catch (e) {
@@ -22,13 +25,17 @@ export async function getMembers(): Promise<Member[]> {
 
 }
 export async function getPendingMembers(): Promise<Member[]> {
-	const res = await fetch(`${url(MEMBERS_ROUTE)}/pending`)
+	const res = await fetch(`${url(MEMBERS_ROUTE)}/pending`, { credentials: "include"})
 	if(!res.ok) {
-		throw res
+		throw await APIError.fromResponse(res)
 	}
-	const body = await res.json()
+	try {
+		const body = await res.json()
 
-	return body.members as Member[]
+		return body.members as Member[]
+	} catch (e) {
+		throw e
+	}
 }
 
 export async function createMember(member: z.infer<typeof createMemberInput>): Promise<Member> {
@@ -40,8 +47,9 @@ export async function createMember(member: z.infer<typeof createMemberInput>): P
 		}
 	})
 	if(!res.ok) {
-		throw res
+		throw await APIError.fromResponse(res)
 	}
+
 	const body = await res.json()
 
 	return body.member as Member
@@ -67,7 +75,7 @@ export async function updateMember(id: z.infer<typeof memberId>, member: z.infer
 		}
 	})
 	if(!res.ok) {
-		throw res
+		throw await APIError.fromResponse(res) 
 	}
 	const body = await res.json()
 
