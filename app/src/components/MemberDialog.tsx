@@ -19,7 +19,7 @@ export function MemberAddDialog() {
 	const {banking, setBanking} = useContext(BankingContext);
 	const handleCreation: JSX.EventHandlerUnion<HTMLFormElement, SubmitEvent, JSX.EventHandler<HTMLFormElement, SubmitEvent>> = async (e) => {
 		e.preventDefault()
-		const memberParser = createMemberInput.omit({bankingId: true}).safeParse(member)
+		const memberParser = createMemberInput.safeParse(member)
 		if(!memberParser.success) {
 			throw (z.formatError(memberParser.error))
 		}
@@ -80,7 +80,7 @@ export function MemberEditDialog() {
 		console.log("UPDATE")
 		setFinished(false)
 		setLoading(true)
-		const parser = memberSchema.omit({bankingId: true }).safeParse(localMember())
+		const parser = memberSchema.safeParse(localMember())
 		if(!parser.success) {
 			setLoading(false)
 			throw (z.formatError(parser.error))
