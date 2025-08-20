@@ -27,7 +27,7 @@ export const bankingInfo = pgTable("banking_information", {
 	lastname: varchar("lastname", { length: 64}),
 	IBAN: varchar("IBAN", { length: 33 }).notNull(),
 	BIC: varchar("BIC", { length: 11 }),
-	memberId: uuid("member_id").references(() => members.id, {onDelete: 'cascade'})
+	memberId: uuid("member_id").references(() => members.id, {onDelete: 'cascade'}).unique()
 })
 
 export const memberRelation = relations(members, ({ one }) => ({
