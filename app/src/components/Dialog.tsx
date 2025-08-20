@@ -1,5 +1,5 @@
 import { Dialog as KobalteDialog } from "@kobalte/core/dialog";
-import { Plus, X } from "lucide-solid";
+import { X } from "lucide-solid";
 import { JSX, ParentProps } from "solid-js";
 
 interface DialogProps {

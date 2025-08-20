@@ -2,14 +2,12 @@ import Dialog from "./Dialog";
 import MemberInputs from "./MemberInputs";
 import BankingInputs from "./BankingInputs";
 import { createMemberWithBanking, updateMember } from "../lib/api/members"
-import { useContext, JSX, createSignal, Setter } from "solid-js";
-import { MemberContext } from "~/lib/contexts/member";
+import { useContext, JSX, createSignal } from "solid-js";
 import { BankingContext } from "~/lib/contexts/banking";
 import { memberSchema, createMemberInput, Member } from "~/lib/validation/member";
 import z from "zod";
 import { createBankingSchema } from "~/lib/validation/banking";
 import { Pencil, Plus } from "lucide-solid";
-import { action, useSubmission } from "@solidjs/router";
 import { createStore } from "solid-js/store";
 
 
