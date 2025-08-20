@@ -6,7 +6,7 @@ import { z } from "zod";
 import { requireUser } from "~/lib/auth";
 import { hasPermission } from "~/lib/auth/roles";
 import { db } from "~/lib/db";
-import { updateBankingSchema } from "~/lib/validation/banking";
+import { createBankingSchema, updateBankingSchema } from "~/lib/validation/banking";
 import { memberId } from "~/lib/validation/member";
 
 export async function GET(event: APIEvent) {
@@ -33,7 +33,31 @@ export async function GET(event: APIEvent) {
 
 }
 
+//TODO
 export async function POST(event: APIEvent) {
+	const { request, params } = event
+	const paramsParser = memberId.safeParse(params.id)
+	if(!paramsParser.success) {
+    return json({ errors: z.formatError(paramsParser.error) }, { status: 400 });
+	}
+
+	const loggedInUser = await requireUser(event)
+	// user logged in and with perms
+	if(!loggedInUser 
+		|| (paramsParser.data != loggedInUser.member.id && !hasPermission(loggedInUser.member.id, "edit_members"))) {
+		return json({ message: "Unauthorized" }, { status: 401 })
+	}
+
+	const body = await request.json()
+	const bodyParser = createBankingSchema.safeParse(body)
+	if(!bodyParser.success) {
+    return json({ errors: z.formatError(bodyParser.error) }, { status: 400 });
+	}
+	
+	const banking = await db.insert(bankingInfo).values(bodyParser.data).returning()
+
+	return json({ banking: banking[0] }, { status: 201 })	
+
 	
 }
 

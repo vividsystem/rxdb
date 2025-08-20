@@ -17,6 +17,6 @@ export const bankingSchema = z.object({
 export const createBankingSchema = bankingSchema.omit({ id: true }).strip()
 
 
-export const updateBankingSchema = createBankingSchema.partial().strip()
+export const updateBankingSchema = createBankingSchema.omit({ memberId: true }).partial().strip()
 
 export type BankingInfo = z.infer<typeof bankingSchema>

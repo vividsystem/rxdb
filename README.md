@@ -22,8 +22,8 @@
         - [x] members
         - [x] banking
     - [x] add /member/:id/banking routes
-    - [ ] add front-end support for new routes
-    - [ ] delete old banking api routes -> maybe even remove delete banking routes (auto deletes w/ cascade)
+    - [x] add front-end support for new routes
+    - [x] delete old banking api routes -> maybe even remove delete banking routes (auto deletes w/ cascade)
     - [ ] add role managment panel to front-end
     - [ ] add auth to front-end protected routes
 - [x] fix error handling between api and front-end => custom error type?
@@ -50,6 +50,10 @@
 - [ ] make Dockerfile for app
 - [ ] postgres with tde
 - [ ] hashicorp vault for storing encryption keys and certs? 
+
+
+### post-mvp
+- [ ] add I18n
 
 
 ## to more features: 

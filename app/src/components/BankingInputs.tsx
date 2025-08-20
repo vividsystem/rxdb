@@ -1,7 +1,5 @@
-import { Accessor, Setter, useContext } from "solid-js";
+import { BankingInfo } from "~/lib/validation/banking";
 import Input from "./Input";
-import { BankingInfo, NewBanking } from "~/api/server";
-import { BankingContext } from "~/lib/contexts/banking";
 
 interface BankingInputsProps {
 	banking: Partial<BankingInfo>

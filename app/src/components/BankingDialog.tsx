@@ -1,6 +1,6 @@
 import { createResource, createSignal } from "solid-js"
 import z from "zod"
-import { createBanking, getBankingFromMemberId, updateBankingInformation } from "~/lib/api/banking"
+import { createBanking, getBanking, updateBankingInformation } from "~/lib/api/banking"
 import { BankingInfo, createBankingSchema, updateBankingSchema } from "~/lib/validation/banking"
 import Dialog from "./Dialog"
 import { MousePointer2 } from "lucide-solid"
@@ -15,7 +15,7 @@ export function BankingEditDialog(props: BankingEditDialogProps) {
   const [banking] = createResource(
     () => props.memberId, 
 		(id: z.infer<typeof memberId>) => {
-  	return getBankingFromMemberId(id)
+  	return getBanking(id)
 		}
   )
 	const [localBanking, setLocalBanking] = createSignal<Partial<BankingInfo> | undefined>(banking.latest)
@@ -35,12 +35,12 @@ export function BankingEditDialog(props: BankingEditDialogProps) {
 			}
 			await createBanking({...parser.data, memberId: props.memberId})
 		} else {
-			const parser = updateBankingSchema.omit({memberId: true}).safeParse(localBanking())
+			const parser = updateBankingSchema.safeParse(localBanking())
 			if(!parser.success) {
 				setLoading(false)
 				throw (z.formatError(parser.error))
 			}
-			await updateBankingInformation(banking.latest!.id, parser.data)
+			await updateBankingInformation(props.memberId, parser.data)
 		}
 		setLoading(false)
 		setFinished(true)
