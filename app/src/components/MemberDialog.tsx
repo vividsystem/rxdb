@@ -22,7 +22,7 @@ export function MemberAddDialog() {
 			throw (z.formatError(memberParser.error))
 		}
 
-		const bankingParser = createBankingSchema.safeParse(banking)
+		const bankingParser = createBankingSchema.omit({memberId: true}).safeParse(banking)
 		if(!bankingParser.success) {
 			throw (z.formatError(bankingParser.error))
 		}

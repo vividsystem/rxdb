@@ -36,6 +36,8 @@
 - [ ] add alerts when error occur
 
 #### minor
+- [ ] fix bug: user gets 401 when its the first request to a protected route. potential ssr problem?
+- [ ] prevent duplicate user creation
 - [ ] zod for env
 - [ ] feat: deny signup __before__ sending email
 - [ ] add BIC auto generation
