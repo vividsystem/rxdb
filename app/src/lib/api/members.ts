@@ -8,10 +8,23 @@ import { APIError } from "./errors"
 export const MEMBERS_ROUTE = "/api/members"
 export const MEMBER_ROUTE = "/api/member"
 
+
+export async function getCurrentMember(): Promise<Member> {
+	const res = await fetch(url(MEMBER_ROUTE))
+	if(!res.ok) {
+		throw await APIError.fromResponse(res)
+	}
+	try {
+		const body = await res.json()
+
+		return body.member as Member
+	} catch (e) {
+		throw e
+	}
+}
+
 export async function getMembers(): Promise<Member[]> {
-	const res = await fetch(url(MEMBERS_ROUTE), { 
-		credentials: "include",
-	})
+	const res = await fetch(url(MEMBERS_ROUTE))
 	if(!res.ok) {
 		throw await APIError.fromResponse(res)
 	}
