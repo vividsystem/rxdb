@@ -25,7 +25,7 @@
     - [x] add front-end support for new routes
     - [x] delete old banking api routes -> maybe even remove delete banking routes (auto deletes w/ cascade)
     - [ ] add role managment panel to front-end
-    - [ ] add auth to front-end protected routes
+    - [x] add auth to front-end protected routes
 - [x] fix error handling between api and front-end => custom error type?
 - [ ] make callback site for new users -> input member info
 - [ ] add logging  -> winston or pino
@@ -36,7 +36,7 @@
 - [ ] add alerts when error occur
 
 #### minor
-- [ ] fix bug: user gets 401 when its the first request to a protected route. potential ssr problem?
+- [x] fix bug: user gets 401 when its the first request to a protected route. potential ssr problem?
 - [ ] prevent duplicate user creation
 - [ ] zod for env
 - [ ] feat: deny signup __before__ sending email

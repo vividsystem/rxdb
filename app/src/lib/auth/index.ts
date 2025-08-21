@@ -14,7 +14,7 @@ export const auth = betterAuth({
 	databaseHooks: {
 		user: {
 			create: {
-				before: async (user, ctx) => {
+				before: async (user, _ctx) => {
 					const member = await db.select().from(members).where(eq(members.email, user.email))
 					if(member.length < 1) {
 						throw new APIError("UNAUTHORIZED", {
@@ -42,13 +42,21 @@ export const auth = betterAuth({
     magicLink({
       expiresIn: 600, // optional, link lives 10 min
       disableSignUp: process.env.NODE_ENV !== "development",
-      sendMagicLink: async ({ email, token, url }, req) => {
-				const res = await sendMagicMail(email, url)
-				console.log(res)
+      sendMagicLink: async ({ email, url }, _req) => {
+				await sendMagicMail(email, url)
       },
     }),
   ],
 });
+
+export async function getMemberFromUserId(userId: string) {
+	const res = await db.select().from(members).where(eq(members.userId, userId))
+	if(res.length < 1) {
+		return
+	}
+
+	return res[0]
+}
 
 export async function requireUser(event: APIEvent) { 
 	const session = await auth.api.getSession({
@@ -56,7 +64,6 @@ export async function requireUser(event: APIEvent) {
   });
 
   if (!session?.user) {
-		console.log(JSON.stringify(session))
 		return
   }
 	
