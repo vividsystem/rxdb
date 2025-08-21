@@ -1,7 +1,7 @@
 "use server";
 
 import { memberRoles, permissions, rolePermissions } from "../../../drizzle/schema";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { db } from "../db";
 import { Permission } from "../db/permissions";
 
@@ -16,7 +16,18 @@ export const getMemberPermissions = async (memberId: string) => {
 }
 
 export const hasPermission = async (memberId: string, perm: Permission) => {
-	const perms = await getMemberPermissions(memberId)
+	const row = await db
+    .select()
+    .from(memberRoles)
+    .innerJoin(rolePermissions, eq(memberRoles.roleId, rolePermissions.roleId))
+    .innerJoin(permissions, eq(rolePermissions.permissionId, permissions.id))
+    .where(
+      and(
+        eq(memberRoles.memberId, memberId),
+        eq(permissions.name, perm)
+      )
+    )
+    .limit(1);
 
-	return perms.includes(perm)
+  return row.length > 0;
 }
