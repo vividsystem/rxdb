@@ -68,7 +68,7 @@ export async function createMember(member: z.infer<typeof createMemberInput>): P
 	return body.member as Member
 }
 
-export async function createMemberWithBanking(member: Omit<z.infer<typeof createMemberInput>, "bankingId">, banking: z.infer<typeof createBankingSchema>): Promise<{ member: Member, bankingInfo: BankingInfo }> {
+export async function createMemberWithBanking(member: z.infer<typeof createMemberInput>, banking: Omit<z.infer<typeof createBankingSchema>, "memberId">): Promise<{ member: Member, bankingInfo: BankingInfo }> {
 	
 
 	const newMember = await createMember({ ...member })
