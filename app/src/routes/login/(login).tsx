@@ -1,10 +1,12 @@
 import { createEffect, createSignal, onMount } from "solid-js";
 import { authClient } from "~/lib/auth-client";
 import Input from "~/components/Input";
+import { useNavigate } from "@solidjs/router";
 
 
 export default function Login() {
   let inputRef: HTMLInputElement | undefined;
+	const navigate = useNavigate();
 	const [email, setEmail] = createSignal("")
 	onMount(() => {
 		inputRef?.focus();
@@ -14,11 +16,15 @@ export default function Login() {
 	const login = async (email: string) => {
 		const {error} =  await authClient.signIn.magicLink({
 			email: email,
-			callbackURL: "/dashboard",
-
+			callbackURL: "/app",
+			newUserCallbackURL: "/onboarding",
 			errorCallbackURL: "/error",
 		})
-		return error
+		if(error) {
+			return error
+		} else {
+			navigate("/login/wait")	
+		}
 	}
 
   return (
@@ -29,7 +35,7 @@ export default function Login() {
 					<Input type="email" name="email" placeholder="name@example.com" value={email} setValue={setEmail} label={() => "Email"} />
 					<button class="w-fit btn text-2xl" onClick={async (e) => {
 						e.preventDefault()
-						const err = login(email())
+						const err = await login(email())
 						console.log(err)
 					}}>Login</button>
 				</form>
