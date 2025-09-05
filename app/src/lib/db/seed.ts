@@ -1,6 +1,6 @@
 // seedPermissions.ts
 import { db } from ".";
-import { memberRoles, members, permissions, rolePermissions, roles } from "../../../drizzle/schema";
+import { memberRoles, members, permissions, rolePermissions, roles } from "@/schema";
 import { PERMISSIONS } from "./permissions";
 import { eq } from "drizzle-orm";
 

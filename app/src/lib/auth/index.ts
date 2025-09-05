@@ -1,12 +1,11 @@
 "use server";
 import { betterAuth } from "better-auth";
-import { APIError } from "better-auth/api";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { magicLink } from "better-auth/plugins";
 import { db } from "../db";
 import { sendMagicMail } from "../mail";
-import { account, user, session, verification } from "../../../drizzle/schema-auth"
-import { members } from "../../../drizzle/schema";
+import { account, user, session, verification } from "@/schema-auth"
+import { members } from "@/schema";
 import { eq } from "drizzle-orm";
 import type { APIEvent } from "@solidjs/start/server";
 
@@ -14,17 +13,8 @@ export const auth = betterAuth({
 	databaseHooks: {
 		user: {
 			create: {
-				before: async (user, _ctx) => {
-					const member = await db.select().from(members).where(eq(members.email, user.email))
-					if(member.length < 1) {
-						throw new APIError("UNAUTHORIZED", {
-							message: "User must be member of the club to sign up"
-						})
-					}
-					return { data: user }
-				},
 				after: async (user) => {
-					db.update(members).set({ userId: user.id }).where(eq(members.email, user.email))
+					await db.update(members).set({ userId: user.id }).where(eq(members.email, user.email))
 				}
 			}
 		}

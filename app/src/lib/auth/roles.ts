@@ -1,6 +1,6 @@
 "use server";
 
-import { memberRoles, permissions, rolePermissions } from "../../../drizzle/schema";
+import { memberRoles, permissions, rolePermissions } from "@/schema";
 import { and, eq } from "drizzle-orm";
 import { db } from "../db";
 import { Permission } from "../db/permissions";
@@ -31,3 +31,4 @@ export const hasPermission = async (memberId: string, perm: Permission) => {
 
   return row.length > 0;
 }
+
