@@ -1,10 +1,8 @@
-import { members } from "../../../../drizzle/schema";
 import { json } from "@solidjs/router";
-import { eq } from "drizzle-orm";
 import { requireUser } from "~/lib/auth";
-import { db } from "~/lib/db";
 import type { APIEvent } from "@solidjs/start/server";
 import { hasPermission } from "~/lib/auth/roles";
+import { getPendingMembers } from "~/lib/db/wrapper/member";
 
 export async function GET(event: APIEvent) {
 	const loggedIn = await requireUser(event)
@@ -14,9 +12,7 @@ export async function GET(event: APIEvent) {
 		return json({ message: "Unauthorized" }, { status: 401 })
 	}
 
-	const allMembers = await db.select().from(members).where(eq(members.verified, false)).catch((e) => {
-		throw e
-	});
+	const allMembers = getPendingMembers()
 	
 	return json({members: allMembers}, {status: 200})
 }

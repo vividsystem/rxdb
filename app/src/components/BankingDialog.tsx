@@ -5,16 +5,16 @@ import { BankingInfo, createBankingSchema, updateBankingSchema } from "~/lib/val
 import Dialog from "./Dialog"
 import { MousePointer2 } from "lucide-solid"
 import BankingInputs from "./BankingInputs"
-import { memberId } from "~/lib/validation/member"
+import { memberIdSchema } from "~/lib/validation/member"
 import { APIError } from "~/lib/api/errors"
 
 interface BankingEditDialogProps {
-	memberId: z.infer<typeof memberId>
+	memberId: z.infer<typeof memberIdSchema>
 }
 export function BankingEditDialog(props: BankingEditDialogProps) {
   const [banking] = createResource(
     () => props.memberId, 
-		(id: z.infer<typeof memberId>) => {
+		(id: z.infer<typeof memberIdSchema>) => {
   	return getBanking(id)
 		}
   )
@@ -71,7 +71,7 @@ export function BankingEditDialog(props: BankingEditDialogProps) {
 		}}>
 				
 			<form>
-				<BankingInputs banking={banking()} setBanking={setLocalBanking}/>
+				<BankingInputs banking={banking() ?? {}} setBanking={setLocalBanking}/>
 				<div class="flex flex-row gap-2 py-4">
 					<button type="submit" class="py-2 px-4 border-1 border-green-200 shadow-md shadow-green-400 bg-green-400" onClick={async (e) => {
 						e.preventDefault()

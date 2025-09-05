@@ -2,12 +2,12 @@ import { z } from "zod";
 import { defaultString } from ".";
 
 
-export const memberId = z.uuid()
+export const memberIdSchema = z.uuid()
 
 export const memberSchema = z.object({
-	id: memberId,
+	id: memberIdSchema,
 	firstname: defaultString,
-	memberSince: z.iso.date(),
+	memberSince: z.iso.date().default(() => new Date().toISOString().split("T")[0]), 
 	verified: z.boolean().default(false),
 	lastname: defaultString,
 	dateOfBirth: z.iso.date(),
@@ -19,11 +19,17 @@ export const memberSchema = z.object({
 	cert: z.boolean().default(false),
 	yearOfExchange: z.string().trim().length(9),
 	exchangeCountry: defaultString,
+	userId: z.string().nonempty().nullable()
 }).strip()
 
-export const createMemberInput = memberSchema.extend({ cert: z.boolean().optional() }).omit({ id: true }).strip()
+// for use to create users as admins
+export const createMemberSchema = memberSchema.omit({ id: true, userId: true }).strip()
+// for use in onboarding process
+export const onboardingMemberSchema = createMemberSchema.omit({ cert: true, verified: true, memberSince: true}).strip()
 
-export const updateMemberInput = createMemberInput.partial().strip()
+export const Input = memberSchema.extend({ cert: z.boolean().optional() }).omit({ id: true }).strip()
+
+export const updateMemberSchema = onboardingMemberSchema.partial().strip()
 
 
 export type Member = z.infer<typeof memberSchema>

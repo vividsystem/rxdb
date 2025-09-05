@@ -1,50 +1,48 @@
-import { bankingInfo } from "../../../../../drizzle/schema";
 import { json } from "@solidjs/router";
 import type { APIEvent } from "@solidjs/start/server";
-import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { requireUser } from "~/lib/auth";
 import { hasPermission } from "~/lib/auth/roles";
-import { db } from "~/lib/db";
+import { createBanking, deleteBanking, getBankingByMemberId, updateBanking } from "~/lib/db/wrapper/banking";
 import { createBankingSchema, updateBankingSchema } from "~/lib/validation/banking";
-import { memberId } from "~/lib/validation/member";
+import { memberIdSchema } from "~/lib/validation/member";
 
 export async function GET(event: APIEvent) {
 	const { params } = event
-	const paramsParser = memberId.safeParse(params.id)
+	const paramsParser = memberIdSchema.safeParse(params.id)
 	if(!paramsParser.success) {
     return json({ errors: z.formatError(paramsParser.error) }, { status: 400 });
 	}
 
 	const loggedInUser = await requireUser(event)
-	// user logged in and with perms
-	if(!loggedInUser 
-		|| (paramsParser.data != loggedInUser.member.id && !hasPermission(loggedInUser.member.id, "view_banking"))) {
+	if(!loggedInUser) {
+		return json({ message: "Unauthorized" }, { status: 401 })
+	}
+	const permitted = await hasPermission(loggedInUser.member.id, "view_banking")
+	if(!permitted && (paramsParser.data != loggedInUser.member.id)) {
 		return json({ message: "Unauthorized" }, { status: 401 })
 	}
 
-	const banking = await db.select().from(bankingInfo).where(eq(bankingInfo.memberId, paramsParser.data))
-	if(banking.length < 1) {
-		return json({message: "Not found"}, {status: 404})
+	const banking = getBankingByMemberId(paramsParser.data)
+	if(!banking) {
+		return json({ message: "Not found"}, {status: 404})
 	}
-
-
-	return json({ banking: banking[0] }, { status: 200 })
 
 }
 
-//TODO
 export async function POST(event: APIEvent) {
 	const { request, params } = event
-	const paramsParser = memberId.safeParse(params.id)
+	const paramsParser = memberIdSchema.safeParse(params.id)
 	if(!paramsParser.success) {
     return json({ errors: z.formatError(paramsParser.error) }, { status: 400 });
 	}
 
 	const loggedInUser = await requireUser(event)
-	// user logged in and with perms
-	if(!loggedInUser 
-		|| (paramsParser.data != loggedInUser.member.id && !hasPermission(loggedInUser.member.id, "edit_members"))) {
+	if(!loggedInUser) {
+		return json({ message: "Unauthorized" }, { status: 401 })
+	}
+	const permitted = await hasPermission(loggedInUser.member.id, "edit_members")
+	if(!permitted && (paramsParser.data != loggedInUser.member.id)) {
 		return json({ message: "Unauthorized" }, { status: 401 })
 	}
 
@@ -54,24 +52,30 @@ export async function POST(event: APIEvent) {
     return json({ errors: z.formatError(bodyParser.error) }, { status: 400 });
 	}
 	
-	const banking = await db.insert(bankingInfo).values(bodyParser.data).returning()
+	const banking = createBanking(bodyParser.data)
+	if(!banking) {
+		return json({message: "Not found"}, {status: 404})
 
-	return json({ banking: banking[0] }, { status: 201 })	
+	}
 
+	return json({ banking: banking }, { status: 201 })	
 	
 }
 
 
 export async function PATCH(event: APIEvent) {
 	const { request, params } = event
-	const paramsParser = memberId.safeParse(params.id)
+	const paramsParser = memberIdSchema.safeParse(params.id)
 	if(!paramsParser.success) {
     return json({ errors: z.formatError(paramsParser.error) }, { status: 400 });
 	}
+
 	const loggedInUser = await requireUser(event)
-	// user logged in and with perms
-	if(!loggedInUser 
-		|| (paramsParser.data != loggedInUser.member.id && !hasPermission(loggedInUser.member.id, "edit_banking"))) {
+	if(!loggedInUser) {
+		return json({ message: "Unauthorized" }, { status: 401 })
+	}
+	const permitted = await hasPermission(loggedInUser.member.id, "edit_banking")
+	if(!permitted && (paramsParser.data != loggedInUser.member.id)) {
 		return json({ message: "Unauthorized" }, { status: 401 })
 	}
 
@@ -81,32 +85,34 @@ export async function PATCH(event: APIEvent) {
     return json({ errors: z.formatError(bodyParser.error) }, { status: 400 });
 	}
 
-	const banking = await db.update(bankingInfo).set(bodyParser.data).where(eq(bankingInfo.memberId, paramsParser.data))
-	if(banking.length < 1) {
+	const banking = updateBanking(paramsParser.data, bodyParser.data)
+	if(!banking) {
 		return json({message: "Not found"}, {status: 404})
 	}
 
-	return json({ banking: banking[0]}, { status: 200})
+	return json({ banking: banking }, { status: 200})
 }
 
 export async function DELETE(event: APIEvent) {
 	const { params } = event
-	const paramsParser = memberId.safeParse(params.id)
+	const paramsParser = memberIdSchema.safeParse(params.id)
 	if(!paramsParser.success) {
     return json({ errors: z.formatError(paramsParser.error) }, { status: 400 });
 	}
 
 	const loggedInUser = await requireUser(event)
-	// user logged in and with perms
-	if(!loggedInUser 
-		|| (paramsParser.data != loggedInUser.member.id && !hasPermission(loggedInUser.member.id, "delete_banking"))) {
+	if(!loggedInUser) {
+		return json({ message: "Unauthorized" }, { status: 401 })
+	}
+	const permitted = await hasPermission(loggedInUser.member.id, "delete_banking")
+	if(!permitted && (paramsParser.data != loggedInUser.member.id)) {
 		return json({ message: "Unauthorized" }, { status: 401 })
 	}
 
-	const banking = await db.delete(bankingInfo).where(eq(bankingInfo.memberId, paramsParser.data))
-	if(banking.length < 1) {
+	const banking = deleteBanking(paramsParser.data)
+	if(!banking) {
 		return json({message: "Not found"}, {status: 404})
 	}
 
-	return json({ banking: banking[0]}, { status: 200})
+	return json({ banking: banking }, { status: 200 })
 }

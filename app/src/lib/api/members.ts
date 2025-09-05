@@ -1,5 +1,5 @@
 import z from "zod"
-import { createMemberInput, Member, memberId, updateMemberInput } from "../validation/member"
+import { memberIdSchema, onboardingMemberSchema, updateMemberSchema } from "../validation/member"
 import { createBanking } from "./banking"
 import { BankingInfo, createBankingSchema } from "../validation/banking"
 import { url } from "./helpers"
@@ -38,7 +38,7 @@ export async function getMembers(): Promise<Member[]> {
 
 }
 export async function getPendingMembers(): Promise<Member[]> {
-	const res = await fetch(`${url(MEMBERS_ROUTE)}/pending`, { credentials: "include"})
+	const res = await fetch(`${url(MEMBERS_ROUTE)}/pending`)
 	if(!res.ok) {
 		throw await APIError.fromResponse(res)
 	}
@@ -51,7 +51,7 @@ export async function getPendingMembers(): Promise<Member[]> {
 	}
 }
 
-export async function createMember(member: z.infer<typeof createMemberInput>): Promise<Member> {
+export async function createMember(member: z.infer<typeof onboardingMemberSchema>): Promise<Member> {
 	const res = await fetch(url(MEMBER_ROUTE), { 
 		method: "POST", 
 		body: JSON.stringify(member), 
@@ -68,10 +68,10 @@ export async function createMember(member: z.infer<typeof createMemberInput>): P
 	return body.member as Member
 }
 
-export async function createMemberWithBanking(member: z.infer<typeof createMemberInput>, banking: Omit<z.infer<typeof createBankingSchema>, "memberId">): Promise<{ member: Member, bankingInfo: BankingInfo }> {
+export async function createMemberWithBanking(member: z.infer<typeof onboardingMemberSchema>, banking: Omit<z.infer<typeof createBankingSchema>, "memberId">): Promise<{ member: Member, bankingInfo: BankingInfo }> {
 	
 
-	const newMember = await createMember({ ...member })
+	const newMember = await createMember(member)
 	const bankingInfo = await createBanking({ ...banking, memberId: newMember.id })
 
 

@@ -2,29 +2,37 @@ import Dialog from "./Dialog";
 import MemberInputs from "./MemberInputs";
 import BankingInputs from "./BankingInputs";
 import { createMemberWithBanking, updateMember } from "../lib/api/members"
-import { useContext, JSX, createSignal } from "solid-js";
-import { BankingContext } from "~/lib/contexts/banking";
-import { memberSchema, createMemberInput, Member } from "~/lib/validation/member";
+import { JSX, createSignal } from "solid-js";
+import { memberSchema, createMemberSchema, Member } from "~/lib/validation/member";
 import z from "zod";
-import { createBankingSchema } from "~/lib/validation/banking";
+import { BankingInfo, createBankingSchema } from "~/lib/validation/banking";
 import { Pencil, Plus } from "lucide-solid";
 import { createStore } from "solid-js/store";
+import { useAlerts } from "~/lib/contexts/alerts";
 
 
 export function MemberAddDialog() {
 	const [member, setMember] = createStore<Partial<Member>>({});
+	const [banking, setBanking] = createStore<Partial<BankingInfo>>({});
+	const { addAlert } = useAlerts();
 
-	const {banking, setBanking} = useContext(BankingContext);
 	const handleCreation: JSX.EventHandlerUnion<HTMLFormElement, SubmitEvent, JSX.EventHandler<HTMLFormElement, SubmitEvent>> = async (e) => {
 		e.preventDefault()
-		const memberParser = createMemberInput.safeParse(member)
+		const memberParser = createMemberSchema.safeParse(member)
 		if(!memberParser.success) {
-			throw (z.formatError(memberParser.error))
+			for (let l of (z.prettifyError(memberParser.error).split("✖"))) {
+				addAlert({ title: l, type: "error"})
+			}
+			return
 		}
 
 		const bankingParser = createBankingSchema.omit({memberId: true}).safeParse(banking)
 		if(!bankingParser.success) {
-			throw (z.formatError(bankingParser.error))
+			for (let l of (z.prettifyError(bankingParser.error).split("✖"))) {
+				addAlert({ title: l, type: "error"})
+			}
+			return
+
 		}
 
 		await createMemberWithBanking(memberParser.data, bankingParser.data)

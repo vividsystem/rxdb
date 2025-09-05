@@ -1,15 +1,13 @@
-import { members } from "../../../../../drizzle/schema";
 import { json } from "@solidjs/router";
 import type { APIEvent } from "@solidjs/start/server";
-import { eq } from "drizzle-orm";
 import z from "zod";
 import { requireUser } from "~/lib/auth";
 import { hasPermission } from "~/lib/auth/roles";
-import { db } from "~/lib/db";
-import { memberId, updateMemberInput } from "~/lib/validation/member";
+import { deleteMember, getMember, updateMember } from "~/lib/db/wrapper/member";
+import { memberIdSchema, updateMemberSchema } from "~/lib/validation/member";
 export async function GET(event: APIEvent) {
 	const { params } = event
-	const idResult = memberId.safeParse(params.id);
+	const idResult = memberIdSchema.safeParse(params.id);
 
 	if (!idResult.success) {
     return json({ errors: z.formatError(idResult.error) }, { status: 400 });
@@ -22,20 +20,18 @@ export async function GET(event: APIEvent) {
 		return json({ message: "Unauthorized" }, { status: 401 })
 	}
 
-	const res = await db.select().from(members).where(eq(members.id, idResult.data))
-	if(res.length < 1) {
+	const member = getMember(idResult.data)
+	if(!member) {
 		return json({message: "Not found"}, {status: 404})
 	}
 
 
-	return json({
-		member: res[0],
-	}, { status: 200 })
+	return json({ member: member }, { status: 200 })
 }
 
 export async function PATCH(event: APIEvent) {
 	const {request, params } = event
-	const idResult = memberId.safeParse(params.id);
+	const idResult = memberIdSchema.safeParse(params.id);
 
 	if (!idResult.success) {
     return json({ errors: z.formatError(idResult.error) }, { status: 400 });
@@ -49,23 +45,23 @@ export async function PATCH(event: APIEvent) {
 	}
 
 	const body = await request.json();
-  const bodyResult = updateMemberInput.safeParse(body);
+  const bodyResult = updateMemberSchema.safeParse(body);
 
 	if (!bodyResult.success) {
     return json({ errors: z.formatError(bodyResult.error) }, { status: 400 });
   }
 
-	const member = await db.update(members).set(bodyResult.data).where(eq(members.id, idResult.data)).returning()
-	if(member.length < 1) {
+	const member = updateMember(idResult.data, bodyResult.data)
+	if(!member) {
 		return json({message: "Not found"}, {status: 404})
 	}
 
-	return json({ member: member[0]}, { status: 200 })
+	return json({ member: member } , { status: 200 })
 }
 
 export async function DELETE(event: APIEvent) {
 	const { params } = event
-	const idResult = memberId.safeParse(params.id);
+	const idResult = memberIdSchema.safeParse(params.id);
 
 	if (!idResult.success) {
     return json({ errors: z.formatError(idResult.error) }, { status: 400 });
@@ -79,13 +75,11 @@ export async function DELETE(event: APIEvent) {
 	}
 	
 
-	const res = await db.delete(members).where(eq(members.id, idResult.data))
-	if(res.length < 1) {
+	const member = deleteMember(idResult.data)
+	if(!member) {
 		return json({message: "Not found"}, {status: 404})
 	}
 
 
-	return json({
-		member: res[0],
-	}, { status: 200 })
+	return json({ member: member }, { status: 200 })
 }

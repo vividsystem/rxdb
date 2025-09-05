@@ -1,22 +1,32 @@
-import { members } from "../../../drizzle/schema";
 import { json } from "@solidjs/router";
 import z from "zod";
-import { db } from "~/lib/db";
-import { createMemberInput } from "~/lib/validation/member";
+import { createMemberSchema } from "~/lib/validation/member";
 import type { APIEvent } from "@solidjs/start/server";
 import { requireUser } from "~/lib/auth";
+import { hasPermission } from "~/lib/auth/roles";
+import { createMember } from "~/lib/db/wrapper/member";
 
-export async function POST({ request }: APIEvent) {
+export async function POST(event: APIEvent) {
+	const { request } = event
 	const body = await request.json();
-  const result = createMemberInput.safeParse(body);
+	const loggedIn = await requireUser(event)
+	if(!loggedIn 
+		|| !hasPermission(loggedIn.member.id, "edit_members")) {
+		body.verified = undefined
+		body.cert = undefined
+	}
 
+	//handle correctly in the future with onboardingMemberSchema
+	const result = createMemberSchema.safeParse(body);
 	if (!result.success) {
-    return json({ errors: z.formatError(result.error) }, { status: 400 });
-  }
+		return json({ errors: z.formatError(result.error) }, { status: 400 });
+	}
+	const member = createMember(result.data)
+	if(!member) {
+		return json({ message: "Something went wrong"}, { status: 500})
+	}
 
-	const member = await db.insert(members).values(result.data).returning()
-
-	return json({ member: member[0] }, { status: 201 })
+	return json({ member: member }, { status: 201 })
 }
 
 export async function GET(event: APIEvent) {
@@ -25,5 +35,5 @@ export async function GET(event: APIEvent) {
 		return json({ message: "Unauthorized" }, { status: 401 })
 	}
 
-	return json({ member: loggedInUser.member})
+	return json({ member: loggedInUser.member })
 }
