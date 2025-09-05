@@ -1,23 +1,23 @@
 import { relations } from "drizzle-orm";
-import { integer, varchar, boolean, serial, date, uuid, text, pgTable } from "drizzle-orm/pg-core";
+import { varchar, boolean, serial, date, uuid, text, pgTable } from "drizzle-orm/pg-core";
 
 import { user } from "./schema-auth";
 export const members = pgTable("members", {
   id: uuid("id").primaryKey().defaultRandom(),
 	userId: text("user_id").references(() => user.id).unique(),
 	verified: boolean("verified").default(false).notNull(),	
-	memberSince: date("member_since"), 
+	memberSince: date("member_since").notNull(), 
 	firstname: varchar("firstname", { length: 64 }).notNull(),
   lastname: varchar("lastname", { length: 64 }).notNull(),
-	dateOfBirth: date("date_of_birth"),
-	telephone: varchar("telephone", {length: 22}),
-	email: text("email").unique(),
-	street: varchar("street", { length: 64 }),
-	postal: varchar("postal", { length: 5 }),
-	city: varchar("city", { length: 64 }),
+	dateOfBirth: date("date_of_birth").notNull(),
+	telephone: varchar("telephone", {length: 22}).notNull(),
+	email: text("email").unique().notNull(),
+	street: varchar("street", { length: 64 }).notNull(),
+	postal: varchar("postal", { length: 5 }).notNull(),
+	city: varchar("city", { length: 64 }).notNull(),
 	cert: boolean("certificate").default(false).notNull(),
-	yearOfExchange: varchar("year_of_exchange", { length: 9 }),
-	exchangeCountry: varchar("exchange_country", { length: 64 }),
+	yearOfExchange: varchar("year_of_exchange", { length: 9 }).notNull(),
+	exchangeCountry: varchar("exchange_country", { length: 64 }).notNull(),
 });
 
 
