@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { varchar, boolean, serial, date, uuid, text, pgTable } from "drizzle-orm/pg-core";
+import { varchar, boolean, serial, date, uuid, text, pgTable, primaryKey } from "drizzle-orm/pg-core";
 
 import { user } from "./schema-auth";
 export const members = pgTable("members", {
@@ -51,9 +51,13 @@ export const permissions = pgTable("permissions", {
 export const memberRoles = pgTable("member_roles", {
 	memberId: uuid("member_id").references(() => members.id).notNull(),
 	roleId: serial("role_id").references(() => roles.id).notNull()
-})
+}, (t) => [
+	primaryKey({ columns: [t.memberId, t.roleId]})
+])
 
 export const rolePermissions = pgTable("role_permissions", {
 	roleId: serial("role_id").references(() => roles.id).notNull(),
 	permissionId: serial("permission_id").references(() => permissions.id).notNull()
-})
+}, (t) => [
+	primaryKey({ columns: [t.roleId, t.permissionId] })
+])
