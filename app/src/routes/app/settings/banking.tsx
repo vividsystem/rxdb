@@ -67,14 +67,12 @@ export default function BankingSettings() {
 	})
 	//stuck in loading...
 	return (<>
-		<main class="p-4">
 		<Show when={localBanking()} fallback={"Loading..."}>
 			<form onSubmit={handleUpdate}>
 			<BankingInputs banking={localBanking()!} setBanking={setLocalBanking}/>	
 			<button class="p-4 container text-2xl" type="submit">Edit</button>
 			</form>
 		</Show>
-		</main>
 	</>)
 
 }

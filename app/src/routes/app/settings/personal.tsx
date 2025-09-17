@@ -38,16 +38,12 @@ export default function PersonalSettings() {
 		}
 	})
 
-	return (
-		<>
-			<main class="p-4">
-				<Show when={localMember()} fallback={"Loading..."}>
-					<form onSubmit={handleUpdate}>
-						<OnboardingMemberInputs member={localMember()!} setMember={setLocalMember}/>
-						<button class="p-4 container text-2xl" type="submit">Edit</button>
-					</form>
-				</Show>
-			</main>
-		</>
-	)
+	return (<>
+		<Show when={localMember()} fallback={"Loading..."}>
+			<form onSubmit={handleUpdate}>
+				<OnboardingMemberInputs member={localMember()!} setMember={setLocalMember}/>
+				<button class="p-4 container text-2xl" type="submit">Edit</button>
+			</form>
+		</Show>
+	</>)
 }
