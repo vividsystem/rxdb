@@ -7,3 +7,5 @@ export const roleSchema = z.object({
 })
 
 export const createRoleSchema = roleSchema.omit({id: true})
+
+export const updateRoleSchema = createRoleSchema
