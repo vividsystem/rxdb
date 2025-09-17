@@ -24,8 +24,13 @@
     - [x] add /member/:id/banking routes
     - [x] add front-end support for new routes
     - [x] delete old banking api routes -> maybe even remove delete banking routes (auto deletes w/ cascade)
+    - [ ] make role api routes
+    - [x] make member roles and permissions api routes
     - [ ] add role managment panel to front-end
-    - [ ] add permission routes to back-end -> check permissions
+    - [x] add permission routes to back-end -> check permissions
+        - [x] rolepermission db wrapper
+        - [x] memberrole db wrapper
+        - [x] role wrapper
     - [x] only show nav links for things the user is allowed to access
     - [x] add auth to front-end protected routes
 - [x] fix error handling between api and front-end => custom error type?
@@ -47,6 +52,7 @@
 - [ ] add rate limiting, csrf, etc.
 - [ ] export feature: export (partial) table -> select certain columns -> emails etc.
 - [ ] make design responsive/mobile support
+- [ ] add search to table -> query params in backend? and input
 - [ ] add alerts when error occur
 
 
@@ -61,11 +67,10 @@
 - [x] change db schema to have a memberId in banking with on delete cascade instead of a banking id in member
 - [x] fix @/schema import bug
 - [ ] change email equality check between user and email to memberId in requireUser
-- [ ]
 
 
 ### deployment
-- [ ] make Dockerfile for app
+- [ ] make Dockerfile for app -> seed/start config
 - [ ] postgres with tde
 - [ ] hashicorp vault for storing encryption keys and certs? 
 - [ ] email back-end? -> 2 birds 1 stone for email hosting?

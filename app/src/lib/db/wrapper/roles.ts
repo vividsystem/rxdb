@@ -7,7 +7,9 @@ import { createRoleSchema, roleIdSchema, updateRoleSchema } from "~/lib/validati
 
 //managing a members roles
 export async function getMemberRoles(memberId: z.infer<typeof memberIdSchema>) {
-	const rows = await db.select().from(memberRoles)
+	const rows = await db.select({
+		role: roles
+	}).from(memberRoles)
 		.innerJoin(roles, eq(memberRoles.roleId, roles.id))
 		.where(eq(memberRoles.memberId, memberId))
 
