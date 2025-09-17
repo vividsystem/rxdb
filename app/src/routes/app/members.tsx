@@ -1,10 +1,10 @@
 import { createAsync, query, redirect, RouteDefinition } from "@solidjs/router";
-import { createEffect, Show } from "solid-js";
+import { Show } from "solid-js";
 import MemberTable from "~/components/MemberTable";
 import { getRequestEvent } from "solid-js/web";
 import { auth, getMemberFromUserId } from "~/lib/auth";
-import { hasPermission } from "~/lib/auth/roles";
 import { getPendingMembers, getVerifiedMembers } from "~/lib/db/wrapper/member";
+import { hasPermission } from "~/lib/db/wrapper/permissions";
 
 
 export const route = {

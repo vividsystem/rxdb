@@ -2,8 +2,8 @@ import { json } from "@solidjs/router";
 import type { APIEvent } from "@solidjs/start/server";
 import { z } from "zod";
 import { requireUser } from "~/lib/auth";
-import { hasPermission } from "~/lib/auth/roles";
 import { createBanking, deleteBanking, getBankingByMemberId, updateBanking } from "~/lib/db/wrapper/banking";
+import { hasPermission } from "~/lib/db/wrapper/permissions";
 import { createBankingSchema, updateBankingSchema } from "~/lib/validation/banking";
 import { memberIdSchema } from "~/lib/validation/member";
 

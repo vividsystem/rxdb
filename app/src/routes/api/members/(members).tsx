@@ -1,8 +1,8 @@
 import { json } from "@solidjs/router";
 import type { APIEvent } from "@solidjs/start/server";
 import { requireUser } from "~/lib/auth";
-import { hasPermission } from "~/lib/auth/roles";
 import { getVerifiedMembers } from "~/lib/db/wrapper/member";
+import { hasPermission } from "~/lib/db/wrapper/permissions";
 
 export async function GET(event: APIEvent) {
 	const loggedIn = await requireUser(event)

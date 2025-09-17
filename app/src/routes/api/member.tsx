@@ -3,8 +3,8 @@ import z from "zod";
 import { createMemberSchema } from "~/lib/validation/member";
 import type { APIEvent } from "@solidjs/start/server";
 import { requireUser } from "~/lib/auth";
-import { hasPermission } from "~/lib/auth/roles";
 import { createMember } from "~/lib/db/wrapper/member";
+import { hasPermission } from "~/lib/db/wrapper/permissions";
 
 export async function POST(event: APIEvent) {
 	const { request } = event

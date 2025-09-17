@@ -1,7 +1,7 @@
 import { members } from "@/schema";
 import { createAsync, query, redirect, RouteDefinition, useNavigate } from "@solidjs/router";
 import { eq, or } from "drizzle-orm";
-import { JSX, useContext } from "solid-js";
+import { JSX } from "solid-js";
 import { createStore } from "solid-js/store";
 import { getRequestEvent } from "solid-js/web";
 import z from "zod";
@@ -9,10 +9,9 @@ import BankingInputs from "~/components/BankingInputs";
 import { OnboardingMemberInputs } from "~/components/MemberInputs";
 import { createMemberWithBanking } from "~/lib/api/members";
 import { auth } from "~/lib/auth";
-import { BankingContext } from "~/lib/contexts/banking";
 import { db } from "~/lib/db";
 import { BankingInfo, createBankingSchema } from "~/lib/validation/banking";
-import { createMemberInput, Member, onboardingMemberSchema } from "~/lib/validation/member";
+import { Member, onboardingMemberSchema } from "~/lib/validation/member";
 
 export const route = {
   preload() {}

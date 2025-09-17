@@ -2,8 +2,8 @@ import { json } from "@solidjs/router";
 import type { APIEvent } from "@solidjs/start/server";
 import z from "zod";
 import { requireUser } from "~/lib/auth";
-import { hasPermission } from "~/lib/auth/roles";
 import { deleteMember, getMember, updateMember } from "~/lib/db/wrapper/member";
+import { hasPermission } from "~/lib/db/wrapper/permissions";
 import { memberIdSchema, updateMemberSchema } from "~/lib/validation/member";
 export async function GET(event: APIEvent) {
 	const { params } = event
